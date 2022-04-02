@@ -1,0 +1,20 @@
+## GODADDY
+
+Options +MultiViews
+
+## REMOVE EXTENSIONS
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+## ERROR 404
+ErrorDocument 404 http://localhost/freestyle-torino/404
+
+## FROM EXTENSIONS TO NON EXTENSIONS
+
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+RewriteRule ^ /%1[R=301,NE,L]
+
+
+

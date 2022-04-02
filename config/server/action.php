@@ -250,7 +250,7 @@
 
     }
 
-    // selezione prodotti da prezzo alto a basso
+    /* selezione prodotti da prezzo alto a basso
     if(isset($_POST["selezioneProdottoPrezzoUp"])) {
 
         $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
@@ -286,7 +286,7 @@
 
     }
 
-    // selezione prodotti da prezzo basso ad alto
+     selezione prodotti da prezzo basso ad alto
     if(isset($_POST["selezioneProdottoPrezzoDw"])) {
 
         $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
@@ -464,7 +464,7 @@
 
         }
 
-    }
+    } */
 
     // inserisci prodotto
     if(isset($_POST["inserisciArticolo"])) {

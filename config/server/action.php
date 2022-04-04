@@ -177,7 +177,7 @@
 
     }
 
-    // selezione prodotti stock
+    /* selezione prodotti stock
     if(isset($_POST["selezioneProdotto"])) {
 
         $s=$conn->prepare("SELECT pv.id, p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
@@ -250,7 +250,7 @@
 
     }
 
-    /* selezione prodotti da prezzo alto a basso
+     selezione prodotti da prezzo alto a basso
     if(isset($_POST["selezioneProdottoPrezzoUp"])) {
 
         $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
@@ -1581,7 +1581,7 @@
         }
     }
 
-    // registrazione utente
+    // modifica utente
     if(isset($_POST["modificaUtente"])) {
 
         // dichiarazione +  escape + minuscolo + hash password default
@@ -2885,7 +2885,6 @@
 
     //modifica password
     if(isset($_POST['recuperoPssw3'])){
-
 
         $email = htmlspecialchars(strip_tags(strtolower($_SESSION['email'])));
         $cod_recupero = htmlspecialchars(strip_tags($_SESSION['cod_recupero']));

@@ -358,7 +358,7 @@
 				';
 
 			// email bot -> admin (notifica)
-			$to2 = 'freestyleconceptstoretorino@gmail.com'; //admin freestyle
+			$to2 = 'freestyle.nichelino@gmail.com'; //admin freestyle
 			$subject2 = 'Hai un nuovo ordine da preparare!';
 			$message2 = $m2;
             $from = 'noreply@freestyleconceptstore.it';

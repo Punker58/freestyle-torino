@@ -116,7 +116,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST">
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                 <div class="form-floating mb-3">
 
@@ -220,7 +220,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST">
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                 <div class="form-floating mb-3">
 
@@ -298,7 +298,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data">
+                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                                     <div class="form-floating mb-3">
 
@@ -349,7 +349,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data">
+                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                                     <div class="form-floating mb-3">
 
@@ -402,7 +402,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST">
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control mb-3" id="sArticolo5">
@@ -491,7 +491,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST">
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                 <div class="form-floating mb-3">
 
@@ -590,7 +590,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data">
+                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                                     <div class="form-floating mb-3">
 
@@ -601,13 +601,20 @@
 
                                     </div>
 
-                                    <div class="form-floating mb-3">
-                                        <?php
-                                            for($zi=0; $zi<10; $zi++){
-                                                echo   '<input type="file" class="form-control" name="foto'.$zi.'" >';
-                                            }
-                                        ?>                                 
-                                    </div> 
+                                    <div class="row">
+
+                                        
+                                            <?php
+                                                for($zi=0; $zi<10; $zi++){
+                                                    echo'<div class="form-floating mb-3 col-8">';
+                                                    echo   '<input type="file" class="form-control" name="foto'.$zi.'" >';
+                                                    echo '</div>';
+                                                    $a = $zi+1;
+                                                    echo 'SLOT:  '.$a;
+                                                }
+                                            ?>                                 
+
+                                    </div>
 
                                     </div>
 
@@ -639,7 +646,7 @@
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data">
+                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data" autocomplete="off">
 
                                     <div class="form-floating mb-3">
 
@@ -700,9 +707,7 @@
                                     <th scope="col">Descrizione</th>    
                                     <th scope="col">Categoria</th>
                                     <th scope="col">Foto</th>
-                                    <th scope="col">Taglia</th>
-                                    <th scope="col">Colore</th>
-                                    <th scope="col">Quantità</th>
+                                    <th scope="col">Colore - Taglia - Quantità</th>
                                     <th scope="col">Like</th>
                                     <th scope="col">Sconto</th>
                                     <th scope="col">Azione</th>
@@ -711,11 +716,9 @@
 
                             <?php
 
-                                $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione,  p.categoria,
+                                $s=$conn->prepare("SELECT GROUP_CONCAT(c.n_colore, ' - ',t.n_taglia, ' - ', pv.quantita, '<br>') AS variante, p.id_prodotto, p.nome, p.prezzo, p.descrizione,  p.categoria,
                                                             pf.foto0, pf.foto1, pf.foto2,pf.foto3, pf.foto4, pf.foto5, pf.foto6, pf.foto7, pf.foto8, pf.foto9,
-                                                            pv.quantita, p._like, p.in_sconto, pv.id,
-                                                            c.n_colore,
-                                                            t.n_taglia,
+                                                            p._like, p.in_sconto, pv.id,
                                                             ca.n_categoria
                                                     FROM prodotti as p
                                                     JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
@@ -723,6 +726,7 @@
                                                     JOIN colore as c ON c.id = pv.id_colore
                                                     JOIN taglia as t ON t.id = pv.id_taglia
                                                     JOIN categoria as ca ON ca.id = p.categoria
+                                                    GROUP BY p.id
                                                     $i
                                                     LIMIT ".$fr.','.$rpp);		
                                 $s->execute();  
@@ -738,9 +742,7 @@
                                     $categoria = $row['n_categoria'];
                                     $foto = array($row['foto0'], $row['foto1'], $row['foto2'] , $row['foto3'],$row['foto4'],
                                                 $row['foto5'], $row['foto6'], $row['foto7'], $row['foto8'], $row['foto9']);
-                                    $taglia = $row['n_taglia'];
-                                    $colore = $row['n_colore'];
-                                    $quantita = $row['quantita'];
+                                    $var = $row['variante'];
                                     $like = $row['_like'];
                                     $in_sconto = $row['in_sconto'];
                                     $id_categoria = $row['categoria'];
@@ -770,9 +772,7 @@
                                 <?php    
                                     echo'            
                                             </td>
-                                            <td>'.$taglia.'</td>
-                                            <td>'.$colore.'</td>
-                                            <td>'.$quantita.'</td>
+                                            <td>'.$var.'</td>
                                             <td>'.$like.'</td>
                                             <td>'.$in_sconto.'</td>
                                             <td>

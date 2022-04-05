@@ -81,11 +81,11 @@
 
             <div class="row my-5">
 
-                <!-- CODICE TRACKING REGISTRATO -->
+                <!-- CODICE TRACKING NON REGISTRATO -->
                 <div class="col-md-3">
                     <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded mb-3" type="button" data-bs-toggle="modal" data-bs-target="#art1">
                         <div>
-                            <p class="fs-5">Codice tracking<br>(utente registrato)</p>
+                            <p class="fs-5">Codice tracking<br>(utente non registrato)</p>
                         </div>
                             <i class="fas fa-tshirt fs-1 primary-text border rounded-full bg-danger p-3"></i>
                     </div>
@@ -100,7 +100,7 @@
                         </div>
                         <div class="modal-body">
 
-                            <form action="../../config/server/action" method="POST">
+                            <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                 <div class="form-floating mb-3">
 
@@ -166,17 +166,17 @@
                     </div>
                 </div>  
 
-                <!-- CODICE TRACKING NON REGISTRATO -->
+                <!-- CODICE TRACKING REGISTRATO -->
                 <div class="col-md-3">
-                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded mb-3" type="button" data-bs-toggle="modal" data-bs-target="#art1">
+                    <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded mb-3" type="button" data-bs-toggle="modal" data-bs-target="#art2">
                         <div>
-                            <p class="fs-5">Codice tracking<br>(utente non registrato)</p>
+                            <p class="fs-5">Codice tracking<br>(utente registrato)</p>
                         </div>
                             <i class="fas fa-tshirt fs-1 primary-text border rounded-full bg-danger p-3"></i>
                     </div>
                 </div>
                 
-                <div class="modal fade" id="art1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="art2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                         <div class="modal-header">
@@ -185,7 +185,7 @@
                         </div>
                         <div class="modal-body">
 
-                            <form action="../../config/server/action" method="POST">
+                            <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                 <div class="form-floating mb-3">
 

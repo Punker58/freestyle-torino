@@ -53,12 +53,12 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Aggiungi articolo</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Aggiungi Colore</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST">
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
 
 
                                 <div class="form-floating mb-3">
@@ -91,12 +91,12 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Aggiungi articolo</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Aggiungi Taglia</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
 
-                                <form action="../../config/server/action" method="POST">
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="floatingTaglia" name="taglia" placeholder="TAGLIA">
@@ -109,55 +109,11 @@
                                     <button type="submit" class="btn btn-success" name="inserisciTaglia">Inserisci</button>
                                 </div>
 
-                            </form>
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    <!-- AGGIUNGI CATEGORIA -->
-                    <!--<div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art3">
-                            <div>
-                                <p class="fs-5">Aggiungi Categoria</p>
-                            </div>
-                                <i class="fas fa-tshirt fs-1 primary-text border rounded-full secondary-bg p-3"></i>
-                        </div>
-                    </div>
-                
-                    <div class="modal fade" id="art3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Aggiungi Categoria</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <form action="../../config/server/action" method="POST">
-
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="floatingCategoria" name="categoria" placeholder="CATEGORIA">
-                                            <label for="floatingCategoria">CATEGORIA</label>
-                                        </div>
-
-                                        <div class="form-floating mb-3">
-                                            <select class="form-control "name="attiva" id="floatingSconto">
-                                                <option value="SI">SI</option>
-                                                <option value="NO">NO</option>
-                                            </select>
-                                            <label for="floatingSconto">ATTIVA</label>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-success" name="inserisciCategoria">Inserisci</button>
-                                        </div>
-
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    
                     <!-- ATTIVA/DISATTIVA CATEGORIA -->
                     <div class="col-md-3">
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art4">
@@ -177,7 +133,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <form action="../../config/server/action" method="POST">
+                                    <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                         <div class="form-floating mb-3">
 
@@ -242,7 +198,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <form action="../../config/server/action" method="POST">
+                                    <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                         <div class="form-floating mb-3">
                                             <input type="number" class="form-control" id="floatingSconto" name="sconto" placeholder="SCONTO">
@@ -283,7 +239,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <form action="../../config/server/action" method="POST">
+                                    <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="floatingSconto" name="nome" placeholder="SCONTO">
@@ -373,7 +329,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <form action="../../config/server/action" method="POST">
+                                    <form action="../../config/server/action" method="POST" autocomplete="off">
 
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="floatingSconto" name="nome" placeholder="SCONTO">
@@ -506,7 +462,225 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                     
+                    </div>   
+                    
+                    <!-- ELIMINA COLORE -->
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art9">
+                            <div>
+                                <p class="fs-5">Elimina Colore</p>
+                            </div>
+                                <i class="fas fa-trash fs-1 primary-text border rounded-full bg-danger p-3"></i>
+                        </div>
+                    </div>
+                
+                    <div class="modal fade" id="art9" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Elimina Colore</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
+
+                                <select class="form-select" aria-label="Default select" name="id">
+                                    <option selected="" hidden="">SELEZIONA UN COLORE</option>
+                                    <?php
+                                    
+                                        $s=$conn->prepare("SELECT * FROM colore");
+                                        $s->execute();  
+                                        $r = $s->get_result(); 
+                                
+                                        while ($row = $r->fetch_assoc()) {
+                                
+                                            $id = $row['id'];
+                                            $nome = $row['n_colore'];
+                                
+                                            echo '  <option value="'.$id.'">'.$nome.'</option>';
+                                        }
+
+                                    ?>
+
+                                </select>
+
+                            </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger" name="eliminaColore">Elimina</button>
+                                </div>
+
+                            </form>
+                            </div>
+                        </div>
+                    </div>  
+                    
+                    <!-- ELIMINA TAGLIA -->
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art10">
+                            <div>
+                                <p class="fs-5">Elimina Taglia</p>
+                            </div>
+                                <i class="fas fa-trash fs-1 primary-text border rounded-full bg-danger p-3"></i>
+                        </div>
+                    </div>
+                
+                    <div class="modal fade" id="art10" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Elimina Taglia</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
+
+                                <select class="form-select" aria-label="Default select" name="id">
+                                    <option selected="" hidden="">SELEZIONA UNA TAGLIA</option>
+                                    <?php
+                                    
+                                        $s=$conn->prepare("SELECT * FROM taglia");
+                                        $s->execute();  
+                                        $r = $s->get_result(); 
+                                
+                                        while ($row = $r->fetch_assoc()) {
+                                
+                                            $id = $row['id'];
+                                            $nome = $row['n_taglia'];
+                                
+                                            echo '  <option value="'.$id.'">'.$nome.'</option>';
+                                        }
+
+                                    ?>
+
+                                </select>
+
+                            </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger" name="eliminaTaglia">Elimina</button>
+                                </div>
+
+                            </form>
+                            </div>
+                        </div>
+                    </div>   
+                    
+                    <!-- MODIFICA COLORE -->
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art11">
+                            <div>
+                                <p class="fs-5">Modifica Colore</p>
+                            </div>
+                                <i class="fas fa-exchange-alt fs-1 primary-text border rounded-full bg-danger p-3"></i>
+                        </div>
+                    </div>
+                
+                    <div class="modal fade" id="art11" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modifica Colore</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
+
+                                <select class="form-select mb-3" aria-label="Default select" name="id">
+                                    <option selected="" hidden="">SELEZIONA UN COLORE</option>
+                                    <?php
+                                    
+                                        $s=$conn->prepare("SELECT * FROM colore");
+                                        $s->execute();  
+                                        $r = $s->get_result(); 
+                                
+                                        while ($row = $r->fetch_assoc()) {
+                                
+                                            $id = $row['id'];
+                                            $nome = $row['n_colore'];
+                                
+                                            echo '  <option value="'.$id.'">'.$nome.'</option>';
+                                        }
+
+                                    ?>
+
+                                </select>
+                                
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="floatingNome" name="nome" placeholder="Nome">
+                                    <label for="floatingNome">Nuovo Nome</label>
+                                </div>                                
+
+                            </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-warning" name="modificaColore">Modifica</button>
+                                </div>
+
+                            </form>
+                            </div>
+                        </div>
+                    </div>      
+                    
+                    <!-- MODIFICA TAGLIA -->
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art12">
+                            <div>
+                                <p class="fs-5">Modifica Taglia</p>
+                            </div>
+                                <i class="fas fa-exchange-alt fs-1 primary-text border rounded-full bg-danger p-3"></i>
+                        </div>
+                    </div>
+                
+                    <div class="modal fade" id="art12" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modifica Taglia</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <form action="../../config/server/action" method="POST" autocomplete="off">
+
+                                <select class="form-select mb-3" aria-label="Default select" name="id">
+                                    <option selected="" hidden="">SELEZIONA UNA TAGLIA</option>
+                                    <?php
+                                    
+                                        $s=$conn->prepare("SELECT * FROM taglia");
+                                        $s->execute();  
+                                        $r = $s->get_result(); 
+                                
+                                        while ($row = $r->fetch_assoc()) {
+                                
+                                            $id = $row['id'];
+                                            $nome = $row['n_taglia'];
+                                
+                                            echo '  <option value="'.$id.'">'.$nome.'</option>';
+                                        }
+
+                                    ?>
+
+                                </select>
+                                
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="floatingNome" name="nome" placeholder="Nome">
+                                    <label for="floatingNome">Nuovo Nome</label>
+                                </div>                                
+
+                            </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-warning" name="modificaTaglia">Modifica</button>
+                                </div>
+
+                            </form>
+                            </div>
+                        </div>
+                    </div>                       
 
                     <!--TABELLE -->
                     <div class="row g-3 my-2">
@@ -828,6 +1002,62 @@
                     showConfirmButton: false});
             </script>
             ";
+            unset($_SESSION['success']);
+        }
+        else if(isset($_SESSION['success']) && $_SESSION['success'] == 3)
+        {
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Colore modificato con successo.',
+                    timer: 2000,
+                    showConfirmButton: false});
+            </script>
+            ";
+
+            unset($_SESSION['success']);
+        }
+        else if(isset($_SESSION['success']) && $_SESSION['success'] == 4)
+        {
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Colore eliminato con successo.',
+                    timer: 2000,
+                    showConfirmButton: false});
+            </script>
+            ";
+
+            unset($_SESSION['success']);
+        }
+        else if(isset($_SESSION['success']) && $_SESSION['success'] == 5)
+        {
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Taglia modificata con successo.',
+                    timer: 2000,
+                    showConfirmButton: false});
+            </script>
+            ";
+
+            unset($_SESSION['success']);
+        }
+        else if(isset($_SESSION['success']) && $_SESSION['success'] == 6)
+        {
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Taglia eliminata con successo.',
+                    timer: 2000,
+                    showConfirmButton: false});
+            </script>
+            ";
+
             unset($_SESSION['success']);
         }
 

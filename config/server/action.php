@@ -177,295 +177,6 @@
 
     }
 
-    /* selezione prodotti stock
-    if(isset($_POST["selezioneProdotto"])) {
-
-        $s=$conn->prepare("SELECT pv.id, p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            GROUP BY p.nome
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }
-
-    // selezione prodotti con più like
-    if(isset($_POST["selezioneProdottoLike"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pv.id_prodotto =  p.id_prodotto
-                            WHERE pv.id_prodotto = 1000
-                            ORDER BY p._like
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }
-
-     selezione prodotti da prezzo alto a basso
-    if(isset($_POST["selezioneProdottoPrezzoUp"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            ORDER BY p.prezzo DESC
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }
-
-     selezione prodotti da prezzo basso ad alto
-    if(isset($_POST["selezioneProdottoPrezzoDw"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            ORDER BY p.prezzo ASC
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }
-
-    // selezione prodotti con sconto
-    if(isset($_POST["selezioneProdottoSconto"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            WHERE p.in_sconto = 1
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }
-
-    // selezione prodotti da nuovi a vecchi
-    if(isset($_POST["selezioneProdottoNuovo"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            ORDER BY id DESC
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }
-
-    // selezione prodotti quasi esaurito
-    if(isset($_POST["selezioneProdottoQuasiEsaurito"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            WHERE pv.quantita = 5
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    }      
-    
-    // selezione prodotti esaurito
-    if(isset($_POST["selezioneProdottoEsaurito"])) {
-
-        $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
-                                    pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5,
-                                    pv.id_taglia, pv.id_colore, pv.quantita, p._like, p.in_sconto
-                            FROM prodotti as p
-                            JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
-                            JOIN prodotti_varianti  as pv ON pf.id_prodotto =  p.id_prodotto
-                            WHERE pv.quantita = 0
-                            ");		
-        $s->execute();  
-        $s->store_result();
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id_prodotto'];
-            $nome = $row['nome'];
-            $prezzo = $row['prezzo'];
-            $descrizione = $row['descrizione'];
-            $categoria = $row['categoria'];
-            $foto1 = $row['foto1'];
-            $foto2 = $row['foto2'];
-            $foto3 = $row['foto3'];
-            $foto4 = $row['foto4'];
-            $foto5 = $row['foto5'];
-            $taglia = $row['id_taglia'];
-            $colore = $row['id_colore'];
-            $quantita = $row['quantita'];
-            $like = $row['like'];
-            $in_sconto = $row['in_sconto'];
-
-        }
-
-    } */
-
     // inserisci prodotto
     if(isset($_POST["inserisciArticolo"])) {
 
@@ -694,6 +405,7 @@
 
     }
 
+    // modifica variante
     if(isset($_POST['aggVarArticolo'])){
 
         if(!empty($_POST['taglia'])){
@@ -746,6 +458,7 @@
 
     }
 
+    // modifica foto 
     if(isset($_POST['aggiornaFotoArticolo'])){
 
         $allowed_ex = array("jpg", "jpeg", "png", "jfif");
@@ -1160,10 +873,12 @@
     // inserisci taglia
     if(isset($_POST["inserisciTaglia"])) {
         
+        $t = strtoupper($_POST['taglia']);
+
         if(!empty($_POST['taglia'])){
             $s=$conn->prepare("INSERT INTO taglia (n_taglia)
                                     VALUES (?)");
-            $s->bind_param("s", $_POST['taglia']);
+            $s->bind_param("s", $t);
             $s->execute();  
             $s->store_result();  
 
@@ -1181,10 +896,15 @@
     // modifica taglia
     if(isset($_POST["modificaTaglia"])) {
 
+        $t = strtoupper($_POST['nome']);
+
         $s=$conn->prepare("UPDATE taglia SET n_taglia = ? WHERE id = ?");
-        $s->bind_param("si", $_POST['nome'], $_POST['id']);
+        $s->bind_param("si", $t, $_POST['id']);
         $s->execute();  
         $s->store_result();  
+
+        $_SESSION['success'] = 5;
+        echo'<script> location.replace("../../pages/admin/extra"); </script>';
     
     }  
     
@@ -1196,6 +916,8 @@
         $s->execute();  
         $s->store_result();  
     
+        $_SESSION['success'] = 4;
+        echo'<script> location.replace("../../pages/admin/extra"); </script>';
     }
     
     // lista taglia
@@ -1218,10 +940,12 @@
     // inserisci colore
     if(isset($_POST["inserisciColore"])) {
 
+        $c = strtoupper($_POST['colore']);
+
         if(!empty($_POST['colore'])){
             $s=$conn->prepare("INSERT INTO colore (n_colore)
                                     VALUES (?)");
-            $s->bind_param("s", $_POST['colore']);
+            $s->bind_param("s", $c);
             $s->execute();  
             $s->store_result();  
 
@@ -1239,10 +963,15 @@
     // modifica colore
     if(isset($_POST["modificaColore"])) {
 
+        $c = strtoupper($_POST['nome']);
+
         $s=$conn->prepare("UPDATE colore SET n_colore =? WHERE id = ?");
-        $s->bind_param("si", $_POST['nome'], $_POST['id']);
+        $s->bind_param("si", $c, $_POST['id']);
         $s->execute();  
         $s->store_result();  
+
+        $_SESSION['success'] = 3;
+        echo'<script> location.replace("../../pages/admin/extra"); </script>';
     
     }  
     
@@ -1254,23 +983,9 @@
         $s->execute();  
         $s->store_result();  
     
+        $_SESSION['success'] = 4;
+        echo'<script> location.replace("../../pages/admin/extra"); </script>';
     }
-    
-    // lista colori
-    if(isset($_POST["listaColore"])) {
-
-        $s=$conn->prepare("SELECT * FROM colore");
-        $s->execute();  
-        $r = $s->get_result(); 
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id'];
-            $nome = $row['n_colore'];
-
-        }
-    
-    } 
 
     // inserisci categoria
     if(isset($_POST["inserisciCategoria"])) {
@@ -1312,23 +1027,6 @@
         $s->store_result();  
     
     }
-    
-    // lista categoria
-    if(isset($_POST["listaCategoria"])) {
-
-        $s=$conn->prepare("SELECT * FROM categoria");
-        $s->execute();  
-        $r = $s->get_result(); 
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id'];
-            $nome = $row['n_categoria'];
-            $attiva = $row['attiva'];
-
-        }
-    
-    } 
 
     // attiva categoria
     if(isset($_POST["attivaCategoria"])) {

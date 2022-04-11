@@ -295,7 +295,7 @@
                                                 <div class="info">
                                                     <div class="text" onclick="window.location=\'articolo-dettagli?id='.$_SESSION['articolo'].'&nome='.$nome.'\';">
 
-                                                        <h4 class="text-uppercase">'.$nome.'</h4>
+                                                        <h5 class="text-uppercase">'.$nome.'</h5>
                                                         <h3>'.$prezzo.' € </h3>
 
                                                     ';

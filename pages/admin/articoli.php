@@ -716,9 +716,11 @@
 
                             <?php
 
-                                $s=$conn->prepare("SELECT GROUP_CONCAT(c.n_colore, ' - ',t.n_taglia, ' - ', pv.quantita, '<br>') AS variante, p.id_prodotto, p.nome, p.prezzo, p.descrizione,  p.categoria,
+                                $s=$conn->prepare("SELECT GROUP_CONCAT(c.n_colore, ' - ',t.n_taglia, ' - ', pv.quantita SEPARATOR '<br>') AS variante,
+                                                            GROUP_CONCAT(pv.id) as id,
+                                                            p.id_prodotto, p.nome, p.prezzo, p.descrizione,  p.categoria,
                                                             pf.foto0, pf.foto1, pf.foto2,pf.foto3, pf.foto4, pf.foto5, pf.foto6, pf.foto7, pf.foto8, pf.foto9,
-                                                            p._like, p.in_sconto, pv.id,
+                                                            p._like, p.in_sconto, 
                                                             ca.n_categoria
                                                     FROM prodotti as p
                                                     JOIN prodotti_foto  as pf ON pf.id_prodotto =  p.id_prodotto
@@ -734,7 +736,6 @@
 
                                 while ($row = $rm->fetch_assoc()) {
 
-                                    $idr = $row['id'];
                                     $id = $row['id_prodotto'];
                                     $nome = $row['nome'];
                                     $prezzo = $row['prezzo'];
@@ -746,6 +747,8 @@
                                     $like = $row['_like'];
                                     $in_sconto = $row['in_sconto'];
                                     $id_categoria = $row['categoria'];
+                                    $idr = explode(",", $row['id']);
+                                    
 
                                     echo 
                                         '
@@ -772,20 +775,29 @@
                                 <?php    
                                     echo'            
                                             </td>
-                                            <td>'.$var.'</td>
+                                            <td class="text-break">'.$var.'</td>
                                             <td>'.$like.'</td>
                                             <td>'.$in_sconto.'</td>
-                                            <td>
-                                                <form method="POST">
-                                                    <input type="hidden" name="idr" value="'.$idr.'"/>
-                                                    <button type="submit" class="btn btn-danger" name="eliminaVariante"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                                </form>
-                                            </td>
-                                        </tr>
                                         ';
 
-                                }
+                                        $s1=$conn->prepare("SELECT id FROM prodotti_varianti WHERE id_prodotto = ?");
+                                        $s1->bind_param("i", $id);
+                                        $s1->execute();  
+                                        $s1->store_result(); 
+                                        $c = $s1->num_rows;
+                                        
+                                        for($i = 0; $i < $c; $i++){
+                                            if(isset($idr[$i])){
+                                                echo '<td>
+                                                <form method="POST">
+                                                    <input type="hidden" name="idr" value="'.$idr[$i].'"/>
+                                                    <button type="submit" class="btn btn-danger btn-sm" name="eliminaVariante"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                </form>
+                                            </td>';
+                                            }
+                                        }
 
+                                }
                             ?>
 
                         </table>
@@ -1172,6 +1184,20 @@
                     icon: 'error',
                     text: 'Uno o più file sono di tipo non consentito.',
                     timer: 3000,
+                    showConfirmButton: false});
+            </script>
+            ";
+            unset($_SESSION['fotoArticolo']);
+        }
+        else if(isset($_SESSION['fotoArticolo']) && $_SESSION['fotoArticolo'] == 4)
+        {
+
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Foto già inserita. Usare AGGIORNA FOTO.',
+                    timer: 2000,
                     showConfirmButton: false});
             </script>
             ";

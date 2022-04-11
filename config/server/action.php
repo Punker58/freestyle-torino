@@ -230,65 +230,84 @@
         $files = array_filter($_FILES['foto']['name']);
         $tot = count($_FILES['foto']['name']);
 
-        if(!empty($_POST['id'] && $tot >= 2 && $tot <=10)){
+        //check se la foto esiste già
+        $s=$conn->prepare("SELECT id FROM prodotti_foto WHERE id_prodotto = ?");
+        $s->bind_param("i", $r);
+        $s->execute();  
+        $s->store_result(); 
+        $c = $s->num_rows;
 
-            // loop file - 5 ovvero 6 foto
-            for( $i=0 ; $i < $tot ; $i++ ) {
+            if ($c > 0){
 
-                //prende il nome temporaneo
-                $img = $_FILES['foto']['name'][$i];
-                $tmp_name = $_FILES['foto']['tmp_name'][$i];
+                $_SESSION['fotoArticolo'] = 4;
+                echo'<script> location.replace("../../pages/admin/articoli"); </script>';
+            
+            }    
+            else
+            {
 
-                //Estensione del file + Corsivo
-                $img_ex = pathinfo($img, PATHINFO_EXTENSION);
-                $img_ex_lc = strtolower($img_ex);
+                // check foto maggiori di 2 ma minori di 11
+                if(!empty($_POST['id'] && $tot >= 2 && $tot <=10)){
 
-                if (in_array($img_ex_lc, $allowed_ex)) {
+                    // loop file - 5 ovvero 6 foto
+                    for( $i=0 ; $i < $tot ; $i++ ) {
 
-                    // Inserisci foto nella cartella 
-                    $new_img_name[$i] = bin2hex(random_bytes(20)).'.'.$img_ex_lc;
-                    $img_upload_path = '../../images/articoli/'.$cat.'/'.$new_img_name[$i];
-                    move_uploaded_file($tmp_name, $img_upload_path);
+                        //prende il nome temporaneo
+                        $img = $_FILES['foto']['name'][$i];
+                        $tmp_name = $_FILES['foto']['tmp_name'][$i];
 
-                }else{
+                        //Estensione del file + Corsivo
+                        $img_ex = pathinfo($img, PATHINFO_EXTENSION);
+                        $img_ex_lc = strtolower($img_ex);
 
-                    $_SESSION['fotoArticolo'] = 3;
+                        if (in_array($img_ex_lc, $allowed_ex)) {
+
+                            // Inserisci foto nella cartella 
+                            $new_img_name[$i] = bin2hex(random_bytes(20)).'.'.$img_ex_lc;
+                            $img_upload_path = '../../images/articoli/'.$cat.'/'.$new_img_name[$i];
+                            move_uploaded_file($tmp_name, $img_upload_path);
+
+                        }else{
+
+                            $_SESSION['fotoArticolo'] = 3;
+                            echo'<script> location.replace("../../pages/admin/articoli"); </script>';
+                        }
+
+
+                    }
+
+                    //2 foto obbligatorie
+                    if(!empty($new_img_name[0]) && !empty($new_img_name[1])){
+
+                        $s=$conn->prepare("INSERT INTO prodotti_foto (id_prodotto, foto0, foto1)
+                                            VALUES (?,?,?)");
+                        $s->bind_param("iss", $_POST['id'], $new_img_name[0], $new_img_name[1]);
+                        $s->execute();  
+                    }
+
+                    for($x=2; $x < 10; $x++){
+
+                        // dalla terza in poi tutto facoltativo
+                        if(!empty($new_img_name[$x])){
+
+                            $s=$conn->prepare("UPDATE prodotti_foto SET foto".$x." = ? WHERE id_prodotto = ?");
+                            $s->bind_param("si", $new_img_name[$x], $_POST['id']);
+                            $s->execute();  
+                        }    
+
+                    }     
+
+                    $_SESSION['fotoArticolo'] = 1;
+                    echo'<script> location.replace("../../pages/admin/articoli"); </script>';
+
+                }
+                else
+                {
+                    $_SESSION['fotoArticolo'] = 2;
                     echo'<script> location.replace("../../pages/admin/articoli"); </script>';
                 }
-
-
+                            
             }
-
-            //2 foto obbligatorie
-            if(!empty($new_img_name[0]) && !empty($new_img_name[1])){
-
-                $s=$conn->prepare("INSERT INTO prodotti_foto (id_prodotto, foto0, foto1)
-                                    VALUES (?,?,?)");
-                $s->bind_param("iss", $_POST['id'], $new_img_name[0], $new_img_name[1]);
-                $s->execute();  
-            }
-
-            for($x=2; $x < 10; $x++){
-
-                // dalla terza in poi tutto facoltativo
-                if(!empty($new_img_name[$x])){
-
-                    $s=$conn->prepare("UPDATE prodotti_foto SET foto".$x." = ? WHERE id_prodotto = ?");
-                    $s->bind_param("si", $new_img_name[$x], $_POST['id']);
-                    $s->execute();  
-                }    
-
-            }     
-
-            $_SESSION['fotoArticolo'] = 1;
-            echo'<script> location.replace("../../pages/admin/articoli"); </script>';
-
-        }
-        else
-        {
-            $_SESSION['fotoArticolo'] = 2;
-            echo'<script> location.replace("../../pages/admin/articoli"); </script>';
-        }
 
     }
 
@@ -918,23 +937,6 @@
     
         $_SESSION['success'] = 4;
         echo'<script> location.replace("../../pages/admin/extra"); </script>';
-    }
-    
-    // lista taglia
-    if(isset($_POST["listaTaglia"])) {
-
-        $s=$conn->prepare("SELECT * FROM taglia");
-        $s->execute();  
-        $r = $s->get_result(); 
-
-        while ($row = $r->fetch_assoc()) {
-
-            $id = $row['id'];
-            $nome = $row['n_taglia'];
-            $categoria = $row['categoria'];
-
-        }
-    
     }
     
     // inserisci colore

@@ -344,7 +344,7 @@
                                         <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
                                         <td>'.$prodotti.'</td>
                                         <td>'.$prezzo.'€</td>
-                                        ';?><td><?php if($stato == 0) { echo "Presa in carico";}elseif($stato == 1){echo "Spedito";}?></td> <?php echo'
+                                        ';?><td><?php if($stato == 0) { echo "Presa in carico";}elseif($stato == 1){echo "Spedito";}elseif($stato == 2){ echo 'Ritiro in negozio';}?></td> <?php echo'
                                     </tr>                                
                                     ';
                             
@@ -411,7 +411,7 @@
                                         <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
                                         <td>'.$prodotti.'</td>
                                         <td>'.$prezzo.'€</td>
-                                        ';?><td><?php if($stato == 0) { echo "Presa in carico";}elseif($stato == 1){echo "Spedito";}?></td> <?php echo'
+                                        ';?><td><?php if($stato == 0) { echo "Presa in carico";}elseif($stato == 1){echo "Spedito";}elseif($stato == 2){ echo 'Ritiro in negozio';}?></td> <?php echo'
                                     </tr>                                
                                     ';
                             

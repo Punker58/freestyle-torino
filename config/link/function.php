@@ -373,7 +373,7 @@
 
       }
 
-    }elseif($_COOKIE['cod_carrello']){
+    }elseif(isset($_COOKIE['cod_carrello'])){
       $_SESSION['cod_carrello'] = $_COOKIE['cod_carrello'];
 
     }else{

@@ -152,7 +152,6 @@
                         $complessivo += $prezzo_totale;
                         $complessivo2 = $complessivo + 7;
                       }
-                      
 
                       echo 
                       '

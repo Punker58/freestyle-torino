@@ -6,10 +6,15 @@
     cod_sconto();
 	if(!isset($_SESSION['y']) OR !isset($_SESSION['token'])){echo'<script> location.replace("../../"); </script>';}
 
-
-    //check token
+    //check token + get var ritiro in negozio + data + stato ordine da ritirare
     $x = str_replace('-', '/', $_GET['token'] );
+	if(isset($_GET['negozio'])){
+		$neg = $_GET['negozio'];
+	}else{
+		$neg = null;
+	}
     $oggi = date("Y/m/d");
+	$staton = 2;
 
     if(password_verify($_SESSION['y'], $x ))
         {
@@ -78,15 +83,14 @@
 
         while ($row = $r->fetch_assoc()){
             $articoli[] = $row['articoli'];
-            $prezzo = $row['prezzo_totale'] + 7; //prezzo + spedizione
+            $prezzo = $row['prezzo_totale']; //prezzo
+			$prezzoS = $prezzo + 7; //prezzo + spedizione
         }
         $articoli2 = implode("</br></br> ", $articoli);
 
         $stato = 0;
 
 		if(!isset($_SESSION['id'])){
-
-			$non_iscritto = 1;
 
 			// inserisci dati dell'utente nel db veloce
             $s1=$conn->prepare("INSERT INTO utente_veloce (nome, cognome, email, indirizzo, cap, citta, provincia,telefono)
@@ -109,19 +113,45 @@
 				$_SESSION['provincia'] = $row['nome_province'];
 			}
 
-			// Inserisci ordine se non sei iscritto
-			$s=$conn->prepare("INSERT INTO ordini (prodotti, data_pagamento, prezzo_totale, stato, utente_veloce) 
-								VALUES (?,?,?,?,?)");
-			$s->bind_param('ssdii', $articoli2, $oggi, $prezzo, $stato, $_SESSION['idr']);		
-			$s->execute(); 
+			// Inserisci ordine se non sei iscritto + ritiro in negozio
+			if($neg == 1){
+
+				$s=$conn->prepare("INSERT INTO ordini (prodotti, data_pagamento, prezzo_totale, stato, utente_veloce) 
+									VALUES (?,?,?,?,?)");
+				$s->bind_param('ssdii', $articoli2, $oggi, $prezzo, $staton, $_SESSION['idr']);		
+				$s->execute(); 
+
+			}
+			else{
+
+				// Inserisci ordine se non sei iscritto + spedizione
+				$s=$conn->prepare("INSERT INTO ordini (prodotti, data_pagamento, prezzo_totale, stato, utente_veloce) 
+							VALUES (?,?,?,?,?)");
+				$s->bind_param('ssdii', $articoli2, $oggi, $prezzoS, $stato, $_SESSION['idr']);		
+				$s->execute(); 
+
+			}
 
 		}else{
 
-			// Inserisci ordine se sei iscritto
+			if($neg == 1) {
+
+				// Inserisci ordine se sei iscritto + ritiro in negozio
+				$s=$conn->prepare("INSERT INTO ordini (id_utente, prodotti, data_pagamento, prezzo_totale, stato) 
+									VALUES (?,?,?,?,?)");
+				$s->bind_param('issdi', $_SESSION['id'], $articoli2, $oggi, $prezzo, $staton);		
+				$s->execute();  
+
+			}else{
+
+			// Inserisci ordine se sei iscritto + spedizione
 			$s=$conn->prepare("INSERT INTO ordini (id_utente, prodotti, data_pagamento, prezzo_totale, stato) 
-								VALUES (?,?,?,?,?)");
-			$s->bind_param('issdi', $_SESSION['id'], $articoli2, $oggi, $prezzo, $stato);		
+						VALUES (?,?,?,?,?)");
+			$s->bind_param('issdi', $_SESSION['id'], $articoli2, $oggi, $prezzoS, $stato);		
 			$s->execute();  
+
+			}
+
 		}
 
         // last id
@@ -138,7 +168,6 @@
         $s->bind_param('s', $_SESSION['cod_carrello']);		
         $s->execute();   
         
-
 		//seleziono gli ordini da mandare tramite email
 		if(isset($_SESSION['idr'])){
 			// non registrato
@@ -158,7 +187,6 @@
 
 				}
 			}
-
 
 		}else{
 			//registrato
@@ -358,7 +386,7 @@
 				';
 
 			// email bot -> admin (notifica)
-			$to2 = 'freestyle.nichelino@gmail.com'; //admin freestyle
+			$to2 = 'freestyle.nichelino@gmail.com'; //admin freestyle 
 			$subject2 = 'Hai un nuovo ordine da preparare!';
 			$message2 = $m2;
             $from = 'noreply@freestyleconceptstore.it';

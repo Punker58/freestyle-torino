@@ -171,7 +171,7 @@
 		//seleziono gli ordini da mandare tramite email
 		if(isset($_SESSION['idr'])){
 			// non registrato
-			$s=$conn->prepare("SELECT * FROM ordini WHERE utente_veloce = ?");
+			$s=$conn->prepare("SELECT * FROM ordini WHERE utente_veloce = ? ORDER BY id DESC");
 			$s->bind_param('i', $_SESSION['idr']);		
 			$s->execute();  
 			$r = $s->get_result();
@@ -190,7 +190,7 @@
 
 		}else{
 			//registrato
-			$s=$conn->prepare("SELECT * FROM ordini WHERE id_utente = ?");
+			$s=$conn->prepare("SELECT * FROM ordini WHERE id_utente = ? ORDER BY id DESC");
 			$s->bind_param('i', $_SESSION['id']);		
 			$s->execute();  
 			$r = $s->get_result();

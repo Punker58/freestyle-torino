@@ -2147,7 +2147,7 @@
 
         if($stato == 1){
 
-            $m = '
+			$m2 = '
             <!DOCTYPE html>
             <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -2289,19 +2289,18 @@
 				</html>
 				';
 
-            // email bot -> utente 
-			$to = $email;
-			$subject = 'il tuo ordine è in arrivo';
-			$message = $m;
+			// email bot -> utente (tracking)
+			$to2 = $email;  
+			$subject2 = 'Hai un nuovo ordine da preparare!';
+			$message2 = $m2;
             $from = 'noreply@freestyleconceptstore.it';
 
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
+			$headers2 = "MIME-Version: 1.0" . "\r\n";
+			$headers2 .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
                  
-			$headers .= "From: ".$from."\r\n";
+			$headers2 .= "From: ".$from."\r\n";
 
-            mail($to, $subject, $message, $headers);
- 
+            mail($to2, $subject2, $message2, $headers2);
  
             $_SESSION['notificaStato'] = 0;
             echo'<script> location.replace("../../pages/admin/ordini"); </script>';
@@ -2311,8 +2310,6 @@
             echo'<script> location.replace("../../pages/admin/ordini"); </script>';
         }
 
-
-    
     }     
 
     // elimina like pagina preferiti

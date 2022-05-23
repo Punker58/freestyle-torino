@@ -397,14 +397,6 @@
       }
     ?>
 
-    <!-- LAVORI IN CORSO -->
-    <script>
-        Swal.fire({
-            icon: 'warning',
-            text: 'Ci scusiamo per il disagio. \n Il nostro sito web è ancora in costruzione',
-            showConfirmButton: true});
-    </script>
-
   <!-- Extra JS -->
     <?php 
       jsInline();

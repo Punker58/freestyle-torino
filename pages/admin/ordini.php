@@ -340,7 +340,7 @@
                                     <tr>
                                         <th scope="row">'.$id_ordine.'</th>
                                         <td>'.$data.'</td>
-                                        <td class="text-capitalize">ID:'.$id.' - '.$nome.' '.$cognome.'</td>
+                                        <td>ID:'.$id.' - <p class="text-capitalize">'.$nome.' '.$cognome.'</p> <p> / '.$email.' / '.$telefono.'</p></td>
                                         <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
                                         <td>'.$prodotti.'</td>
                                         <td>'.$prezzo.'€</td>
@@ -407,7 +407,7 @@
                                     <tr>
                                         <th scope="row">'.$id_ordine.'</th>
                                         <td>'.$data.'</td>
-                                        <td class="text-capitalize">ID:'.$id.' - '.$nome.' '.$cognome.'</td>
+                                        <td>ID:'.$id.' - <p class="text-capitalize">'.$nome.' '.$cognome.'</p> <p> / '.$email.' / '.$telefono.'</p></td>
                                         <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
                                         <td>'.$prodotti.'</td>
                                         <td>'.$prezzo.'€</td>

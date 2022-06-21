@@ -56,7 +56,12 @@
                       $sconto = $row['sconto'];
                       $descrizione = $row['descrizione'];
           
-                      echo '<p>'.$sconto.'% '.$descrizione.'</p>';
+                      if($sconto == 0){
+                        echo '<p>FREESTYLE</p>';
+                      }else{
+                        echo '<p>'.$sconto.'% '.$descrizione.'</p>';
+                      }
+                      
                   }
               
               ?>

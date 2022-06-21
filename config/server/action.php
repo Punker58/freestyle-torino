@@ -166,17 +166,6 @@
 
     }
 
-    // SUPERADMIN - modifica utente
-    if(isset($_POST["modificaUtente"])) {
-
-        $s=$conn->prepare("UPDATE utente SET nome = ?, cognome = ? WHERE id = ?");
-        $s->bind_param("ssi", $_POST['nome'], $_POST['cognome'], $_POST['id']);		
-        $s->execute();  
-        $r = $s->get_result();
-
-
-    }
-
     // inserisci prodotto
     if(isset($_POST["inserisciArticolo"])) {
 
@@ -1138,7 +1127,8 @@
         // Validation backend + check errori
         if  (!empty($nome) && !empty($cognome) && !empty($email) && !empty($password)
                 && !empty($indirizzo) && !empty($citta) && !empty($cap) && !empty($telefono)
-                && strlen($telefono) == 10 && strlen($cap) == 5 && strlen($password) <= 30)
+                && strlen($telefono) == 10 && strlen($cap) == 5 
+                && strlen($password) >= 8 && !ctype_upper($password) && !ctype_lower($password)) // pass check
             {
 
                 // Check dell'esistenza in db
@@ -1949,7 +1939,7 @@
 
         if($stato == 1){
 
-            $m = '
+            $m3 = '
             <!DOCTYPE html>
             <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -2092,17 +2082,17 @@
 				';
 
             // email bot -> utente 
-			$to = $email;
-			$subject = 'il tuo ordine è in arrivo';
-			$message = $m;
-            $from = 'noreply@freestyleconceptstore.it';
+			$to3 = $email;
+			$subject3 = 'Ordine in arrivo';
+			$message3 = $m3;
+            $from3 = 'noreply@freestyleconceptstore.it';
 
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
+			$headers3 = "MIME-Version: 1.0" . "\r\n";
+			$headers3 .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
                  
-			$headers .= "From: ".$from."\r\n";
+			$headers3 .= "From: ".$from3."\r\n";
 
-            mail($to, $subject, $message, $headers);
+            mail($to3, $subject3, $message3, $headers3);
  
  
             $_SESSION['notificaStato'] = 0;
@@ -2147,7 +2137,7 @@
 
         if($stato == 1){
 
-			$m2 = '
+			$m = '
             <!DOCTYPE html>
             <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -2254,7 +2244,7 @@
 								<p>
 									Grazie per il tuo ordine. Ti informiamo che il tuo ordine è stato spedito.
 									La tua data di consegna prevista è indicata in basso.
-									Di seguito troverai il codice tracking del tuo ordine.
+									Di seguito troverai il codice tracking del tuo ordine da inserire nall\'apposita pagina di tracking GLS
 								</p>
 							</div>
 							<div id="two-col">
@@ -2290,17 +2280,17 @@
 				';
 
 			// email bot -> utente (tracking)
-			$to2 = $email;  
-			$subject2 = 'Hai un nuovo ordine da preparare!';
-			$message2 = $m2;
+			$to = $email;  
+			$subject = 'Ordine in arrivo';
+			$message = $m;
             $from = 'noreply@freestyleconceptstore.it';
 
-			$headers2 = "MIME-Version: 1.0" . "\r\n";
-			$headers2 .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
+			$headers = "MIME-Version: 1.0" . "\r\n";
+			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
                  
-			$headers2 .= "From: ".$from."\r\n";
+			$headers .= "From: ".$from."\r\n";
 
-            mail($to2, $subject2, $message2, $headers2);
+            mail($to, $subject, $message, $headers);
  
             $_SESSION['notificaStato'] = 0;
             echo'<script> location.replace("../../pages/admin/ordini"); </script>';

@@ -22,7 +22,8 @@
                         JOIN taglia as t ON t.id = pv.id_taglia
                         JOIN categoria as ca ON ca.id = p.categoria
                         WHERE nome LIKE '%".$_POST['nome']."%'
-                        ORDER BY nome ASC");
+                        GROUP BY pv.id_prodotto
+						ORDER BY nome ASC");
     $s->execute();  
     $r = $s->get_result(); 
 

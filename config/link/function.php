@@ -626,10 +626,9 @@
                   <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
+                <form action="config/server/action" method="post">
                 <div class="modal-body">
                   <div class="row">
-
-                  <form action="config/server/action" method="post">
 
                       <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="floatingnome" name="nome" placeholder="name@example.com" size="30" onKeyDown="if(this.value.length==30 && event.keyCode!=8) return false;" required>
@@ -642,13 +641,13 @@
                       </div>
 
                       <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" size="60" onKeyDown="if(this.value.length==60 && event.keyCode!=8) return false;" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
                         <label for="email">Email *</label>
                       </div>
 
                       <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="name@example.com" size="30" onKeyDown="if(this.value.length==30 && event.keyCode!=8) return false;" required>
-                        <label for="password">Password (MAX 30 Caratteri) *</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="name@example.com" required>
+                        <label for="password">Password * (minimo 8 caratteri, 1 minuscola, 1 maiuscola)</label>
                       </div>
 
                       <hr>
@@ -664,12 +663,12 @@
                         <label for="indirizzo">Indirizzo (ES. Via Italia 18) *</label>
                       </div>
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                         <input type="text" class="form-control" id="citta" name="citta" placeholder="name@example.com" size="30" onKeyDown="if(this.value.length==30 && event.keyCode!=8) return false;" required>
                         <label for="citta">Città *</label>
                       </div>
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                         <input type="number" class="form-control" id="cap" name="cap" placeholder="name@example.com" size="5" onKeyDown="if(this.value.length==5 && event.keyCode!=8) return false;" required>
                         <label for="cap">Cap *</label>
                       </div>
@@ -700,7 +699,7 @@
                         <label for="telefono">Telefono *</label>
                       </div>
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 text-center">
                       <button type="submit" class="btn btn-success" name="registraUtente">Registra</button>
                       </div>
 
@@ -732,10 +731,9 @@
                   <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
+                <form action="../../config/server/action" method="post">
                 <div class="modal-body">
                   <div class="row">
-
-                  <form action="../../config/server/action" method="post">
 
                       <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="floatingnome" name="nome" placeholder="name@example.com" size="30" onKeyDown="if(this.value.length==30 && event.keyCode!=8) return false;" required>
@@ -748,13 +746,13 @@
                       </div>
 
                       <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" size="60" onKeyDown="if(this.value.length==60 && event.keyCode!=8) return false;" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
                         <label for="email">Email *</label>
                       </div>
 
                       <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="name@example.com" size="30" onKeyDown="if(this.value.length==30 && event.keyCode!=8) return false;" required>
-                        <label for="password">Password (MAX 30 Caratteri) *</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="name@example.com" required>
+                        <label for="password">Password * (minimo 8 caratteri, 1 minuscola, 1 maiuscola)</label>
                       </div>
 
                       <hr>
@@ -770,12 +768,12 @@
                         <label for="indirizzo">Indirizzo (ES. Via Italia 18) *</label>
                       </div>
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                         <input type="text" class="form-control" id="citta" name="citta" placeholder="name@example.com" size="30" onKeyDown="if(this.value.length==30 && event.keyCode!=8) return false;" required>
                         <label for="citta">Città *</label>
                       </div>
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                         <input type="number" class="form-control" id="cap" name="cap" placeholder="name@example.com" size="5" onKeyDown="if(this.value.length==5 && event.keyCode!=8) return false;" required>
                         <label for="cap">Cap *</label>
                       </div>
@@ -801,12 +799,12 @@
                       <label for="floatingSelect">Provincia *</label>
                     </div> 
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                         <input type="number" class="form-control" id="telefono" name="telefono" placeholder="name@example.com" size="10" onKeyDown="if(this.value.length==10 && event.keyCode!=8) return false;" required>
                         <label for="telefono">Telefono *</label>
                       </div>
 
-                      <div class="form-floating mb-3">
+                      <div class="form-floating mb-3 text-center">
                       <button type="submit" class="btn btn-success" name="registraUtente">Registra</button>
                       </div>
 

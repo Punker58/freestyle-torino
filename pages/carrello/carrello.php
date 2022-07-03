@@ -57,10 +57,10 @@
             <div class="row utente">
               <?php 
                     $complessivo = 0;
-                    $s=$conn->prepare("SELECT c.id as riga, c.id_utente, c.id_prodotto, c.id_colore, c.id_taglia, c.n_quantita, c.prezzo_totale, c.prezzo_singolo,
+                    $s=$conn->prepare("SELECT c.id as riga, c.id_utente, c.id_prodotto, c.id_colore, c.id_taglia, c.n_quantita,
                                           t.n_taglia, t.id,
                                           co.n_colore, co.id,
-                                          p.nome, p.descrizione, p.categoria,
+                                          p.nome, p.descrizione, p.categoria, p.prezzo, p.prezzo_scontato,
                                           pf.foto0                              
                                         FROM carrello as c
                                         JOIN taglia as t ON t.id = c.id_taglia
@@ -89,9 +89,16 @@
                       $colore = $row['n_colore'];
                       $id_taglia = $row['id_taglia'];
                       $taglia = $row['n_taglia'];
-                      $prezzo_singolo = $row['prezzo_singolo'];
-                      $prezzo_totale = $row['prezzo_totale'];
+
+                      if(isset($row['prezzo_scontato'])){
+                        $prezzo_singolo = $row['prezzo_scontato'];
+                      }else{
+                          $prezzo_scontato = null;
+                          $prezzo_singolo = $row['prezzo'];
+                      }
+
                       $quantita = $row['n_quantita'];
+                      $prezzo_totale = $prezzo_singolo * $quantita;
                       $nome = $row['nome'];
                       $descrizione = $row['descrizione'];
                       $foto1 = $row['foto0'];

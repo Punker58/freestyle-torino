@@ -71,7 +71,7 @@
 
         // seleziono il carrello
         $s=$conn->prepare("SELECT CONCAT (nome,' ( X ',n_quantita,' ) ', ' ( ',n_colore,' ) ', ' ( ',n_taglia,' ) ')
-                            AS articoli, prezzo_totale
+                            AS articoli, p.prezzo, p.prezzo_scontato, c.n_quantita AS qty
                             FROM carrello AS c
                             JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
                             JOIN colore AS co ON co.id = c.id_colore
@@ -83,7 +83,14 @@
 
         while ($row = $r->fetch_assoc()){
             $articoli[] = $row['articoli'];
-            $prezzo = $row['prezzo_totale']; //prezzo
+			$quantita = $row['qty'];
+
+			if(isset($row['prezzo_scontato'])){
+				$prezzo = $row['prezzo_scontato'] * $quantita;
+			  }else{
+				$prezzo = $row['prezzo'] * $quantita;
+			  }
+
 			$prezzoS = $prezzo + 7; //prezzo + spedizione
         }
         $articoli2 = implode("</br></br> ", $articoli);
@@ -207,6 +214,7 @@
 				}
 			}
 		}
+
         $m = '
 		<!DOCTYPE html>
 		<html xmlns="http://www.w3.org/1999/xhtml">

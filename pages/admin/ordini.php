@@ -5,7 +5,31 @@
     
     if( $_SESSION['ruolo'] != 10) {echo'<script> location.replace("../../"); </script>';}
 
-    
+	// ANNULLA ORDINE
+	if(isset($_GET['annullaOrdine']) && $_GET['annullaOrdine']){
+		$id_ao = $_GET['annullaOrdine'];
+		$u=$conn->prepare("UPDATE ordini SET stato = 5 WHERE id = ?");
+		$bu=$u->bind_param("i", $id_ao);
+		$u->execute();
+	}
+
+	// RIMBORSATO ORDINE
+	if(isset($_GET['rimborsaOrdine']) && $_GET['rimborsaOrdine']){
+		$id_ri = $_GET['rimborsaOrdine'];
+		$u=$conn->prepare("UPDATE ordini SET stato = 6 WHERE id = ?");
+		$bu=$u->bind_param("i", $id_ri);
+		$u->execute();
+	}
+
+    // COMPLETA ORDINE
+	if(isset($_GET['completaOrdine']) && $_GET['completaOrdine']){
+		$id_com = $_GET['completaOrdine'];
+		$u=$conn->prepare("UPDATE ordini SET stato = 9 WHERE id = ?");
+		$bu=$u->bind_param("i", $id_com);
+		$u->execute();
+	}    
+
+    // FILTRI
     if(isset($_GET['order']) && $_GET['order'] == 'DESC') {
         $i = 'ORDER BY o.id DESC';
     }
@@ -298,12 +322,14 @@
                                 <th scope="col">Articoli</th>    
                                 <th scope="col">Costo totale</th>
                                 <th>Stato</th>
+                                <th scope="col">Tracking</th>
+                                <th>Azione</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
 
-                            $s=$conn->prepare("SELECT o.id, o.id_utente, o.prodotti, o.data_pagamento, o.prezzo_totale, o.stato,
+                            $s=$conn->prepare("SELECT o.id, o.id_utente, o.prodotti, o.data_pagamento, o.prezzo_totale, o.stato, o.tracking,
                                                 u.nome, u.cognome,
                                                 ui.indirizzo, ui.citta, ui.cap, ui.nome_campanello, ui.telefono, ui.email,
                                                 p.nome_province
@@ -319,34 +345,55 @@
                             
                             while ($row = $rm->fetch_assoc()) {
 
-                                $id_ordine= $row['id'];
-                                $id= $row['id_utente'];
-                                $prodotti= $row['prodotti'];
-                                $data= date("d-m-Y", strtotime($row['data_pagamento']));
-                                $prezzo= $row['prezzo_totale'];
-                                $nome= $row['nome'];
-                                $cognome= $row['cognome'];
-                                $indirizzo= $row['indirizzo'];
-                                $citta= $row['citta'];
-                                $cap= $row['cap'];
-                                $provincia= $row['nome_province'];
-                                $campanello= $row['nome_campanello'];
-                                $telefono= $row['telefono'];
-                                $email= $row['email'];
-                                $stato= $row['stato'];
+                                $id_ordine = $row['id'];
+                                $id = $row['id_utente'];
+                                $prodotti = $row['prodotti'];
+                                $data = date("d-m-Y", strtotime($row['data_pagamento']));
+                                $prezzo = $row['prezzo_totale'];
+                                $nome = $row['nome'];
+                                $cognome = $row['cognome'];
+                                $indirizzo = $row['indirizzo'];
+                                $citta = $row['citta'];
+                                $cap = $row['cap'];
+                                $provincia = $row['nome_province'];
+                                $campanello = $row['nome_campanello'];
+                                $telefono = $row['telefono'];
+                                $email = $row['email'];
+                                $stato = $row['stato'];
+                                $tracking = $row['tracking'];
 
                                 echo
-                                    '
-                                    <tr>
-                                        <th scope="row">'.$id_ordine.'</th>
-                                        <td>'.$data.'</td>
-                                        <td>ID:'.$id.' - <p class="text-capitalize">'.$nome.' '.$cognome.'</p> <p> / '.$email.' / '.$telefono.'</p></td>
-                                        <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
-                                        <td>'.$prodotti.'</td>
-                                        <td>'.$prezzo.'€</td>
-                                        ';?><td><?php if($stato == 0) { echo "Presa in carico";}elseif($stato == 1){echo "Spedito";}elseif($stato == 2){ echo 'Ritiro in negozio';}?></td> <?php echo'
-                                    </tr>                                
-                                    ';
+                                        '
+                                        <tr>
+                                            <th scope="row">'.$id_ordine.'</th>
+                                            <td>'.$data.'</td>
+                                            <td>ID:'.$id.' - <p class="text-capitalize">'.$nome.' '.$cognome.'</p> <p> / '.$email.' / '.$telefono.'</p></td>
+                                            <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
+                                            <td>'.$prodotti.'</td>
+                                            <td>'.number_format($prezzo,2).' €</td>';?>
+                                    <?php 
+                                            if($stato == 0) {
+                                                echo '<td style="color:white;background-color:#0033cc;">in lavorazione</td>';
+                                            }elseif($stato == 1){
+                                                echo '<td style="color:white;background-color:#009900;">spedito</td>';
+                                            }elseif($stato == 9) {
+                                                echo '<td style="color:white;background-color:#009900;">completato</td>';
+                                            }elseif($stato == 5) {
+                                                echo '<td style="color:white;background-color:#b30000">annullato</td>';
+                                            }elseif($stato == 6) {
+                                                echo '<td style="color:black;background-color:#ff9900">rimborsato</td>';
+                                            }elseif($stato == 2) {
+                                                echo '<td style="color:white;background-color:#009900;">ritiro in negozio</td>';
+                                            } 
+                                    echo '
+                                            <td>'.$tracking.'</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" onclick="location.href=\'ordini?annullaOrdine='.$id_ordine.'\'"><i class="fa-solid fa-trash"></i></button>
+                                                <button type="button" class="btn btn-warning" onclick="location.href=\'ordini?rimborsaOrdine='.$id_ordine.'\'"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+                                                <button type="button" class="btn btn-success" onclick="location.href=\'ordini?completaOrdine='.$id_ordine.'\'"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+                                            </td>
+                                        </tr>                                
+                                        ';
                             
                             }
                         ?>   
@@ -368,12 +415,14 @@
                                 <th scope="col">Articoli</th>    
                                 <th scope="col">Costo totale</th>
                                 <th>Stato</th>
+                                <th scope="col">Tracking</th>
+                                <th>Azione</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
 
-                            $s=$conn->prepare("SELECT o.id, o.utente_veloce, o.prodotti, o.data_pagamento, o.prezzo_totale, o.stato,
+                            $s=$conn->prepare("SELECT o.id, o.utente_veloce, o.prodotti, o.data_pagamento, o.prezzo_totale, o.stato, o.tracking,
                                                     u.nome, u.cognome, u.email, u.indirizzo, u.cap, u.citta, u.telefono,
                                                     p.nome_province
                                                 FROM ordini AS o
@@ -387,20 +436,21 @@
                             
                             while ($row = $rm->fetch_assoc()) {
 
-                                $id_ordine= $row['id'];
-                                $id= $row['id'];
-                                $prodotti= $row['prodotti'];
-                                $data= date("d-m-Y", strtotime($row['data_pagamento']));
-                                $prezzo= $row['prezzo_totale'];
-                                $nome= $row['nome'];
-                                $cognome= $row['cognome'];
-                                $indirizzo= $row['indirizzo'];
-                                $citta= $row['citta'];
-                                $cap= $row['cap'];
-                                $provincia= $row['nome_province'];
-                                $telefono= $row['telefono'];
-                                $email= $row['email'];
-                                $stato= $row['stato'];
+                                $id_ordine = $row['id'];
+                                $id = $row['id'];
+                                $prodotti = $row['prodotti'];
+                                $data = date("d-m-Y", strtotime($row['data_pagamento']));
+                                $prezzo = $row['prezzo_totale'];
+                                $nome = $row['nome'];
+                                $cognome = $row['cognome'];
+                                $indirizzo = $row['indirizzo'];
+                                $citta = $row['citta'];
+                                $cap = $row['cap'];
+                                $provincia = $row['nome_province'];
+                                $telefono = $row['telefono'];
+                                $email = $row['email'];
+                                $stato = $row['stato'];
+                                $tracking = $row['tracking'];
 
                                 echo
                                     '
@@ -410,8 +460,28 @@
                                         <td>ID:'.$id.' - <p class="text-capitalize">'.$nome.' '.$cognome.'</p> <p> / '.$email.' / '.$telefono.'</p></td>
                                         <td>'.$indirizzo.' ('.$cap.') '.$citta.' - '.$provincia.'</td>
                                         <td>'.$prodotti.'</td>
-                                        <td>'.$prezzo.'€</td>
-                                        ';?><td><?php if($stato == 0) { echo "Presa in carico";}elseif($stato == 1){echo "Spedito";}elseif($stato == 2){ echo 'Ritiro in negozio';}?></td> <?php echo'
+                                        <td>'.number_format($prezzo,2).' €</td>';?>
+                                <?php 
+                                        if($stato == 0) {
+                                            echo '<td style="color:white;background-color:#0033cc;">in lavorazione</td>';
+                                        }elseif($stato == 1){
+                                            echo '<td style="color:white;background-color:#009900;">spedito</td>';
+                                        }elseif($stato == 9) {
+                                            echo '<td style="color:white;background-color:#009900;">completato</td>';
+                                        }elseif($stato == 5) {
+                                            echo '<td style="color:white;background-color:#b30000">annullato</td>';
+                                        }elseif($stato == 6) {
+                                            echo '<td style="color:black;background-color:#ff9900">rimborsato</td>';
+                                        }elseif($stato == 2) {
+                                            echo '<td style="color:white;background-color:#009900;">ritiro in negozio</td>';
+                                        } 
+                                echo '
+                                        <td>'.$tracking.'</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" onclick="location.href=\'ordini?annullaOrdine='.$id_ordine.'\'"><i class="fa-solid fa-trash"></i></button>
+                                            <button type="button" class="btn btn-warning" onclick="location.href=\'ordini?rimborsaOrdine='.$id_ordine.'\'"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+                                            <button type="button" class="btn btn-success" onclick="location.href=\'ordini?completaOrdine='.$id_ordine.'\'"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+                                        </td>
                                     </tr>                                
                                     ';
                             
@@ -434,17 +504,27 @@
 
                                     //mostra link delle pagine
                                     if(isset($nop)){
-                                        for($i=1;$i<=$nop;$i++){
                                             if(isset($_GET['order'])){
-                                                echo '<li class="page-item"><a class="page-link" href="ordini?page='.$i.'&order='.$_GET['order'].'">'.$i.'</a></li>';
+                                                if($page != 1){
+                                                    echo '<li class="page-item"><a class="page-link" href="ordini?page='.($page-1).'&order='.$_GET['order'].'"><i class="fa-solid fa-arrow-left"></i></a></li>';  
+                                                }
+                                                echo '<li class="page-item"><a class="page-link">'.$page.'</li>';  
+                                                echo '<li class="page-item"><a class="page-link" href="ordini?page='.($page+1).'&order='.$_GET['order'].'"><i class="fa-solid fa-arrow-right"></i></a></li>';  
                                             }
                                             elseif(isset($_GET['price'])){
-                                                echo '<li class="page-item"><a class="page-link" href="ordini?page='.$i.'&price='.$_GET['price'].'">'.$i.'</a></li>';
+                                                if($page != 1){
+                                                    echo '<li class="page-item"><a class="page-link" href="ordini?page='.($page-1).'&price='.$_GET['price'].'"><i class="fa-solid fa-arrow-left"></i></a></li>';  
+                                                }
+                                                echo '<li class="page-item"><a class="page-link">'.$page.'</li>';  
+                                                echo '<li class="page-item"><a class="page-link" href="ordini?page='.($page+1).'&price='.$_GET['price'].'"><i class="fa-solid fa-arrow-right"></i></a></li>';  
                                             }
-                                            else{
-                                                echo '<li class="page-item"><a class="page-link" href="ordini?page='.$i.'">'.$i.'</a></li>';                                                
+                                            else{ 
+                                                if($page != 1){
+                                                    echo '<li class="page-item"><a class="page-link" href="ordini?page='.($page-1).'"><i class="fa-solid fa-arrow-left"></i></a></li>';  
+                                                }
+                                                echo '<li class="page-item"><a class="page-link">'.$page.'</a></li>';
+                                                echo '<li class="page-item"><a class="page-link" href="ordini?page='.($page+1).'"><i class="fa-solid fa-arrow-right"></i></a></li>';                                                
                                             }
-                                        }
                                     } 
                                 ?>
                             </li> 

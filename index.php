@@ -5,6 +5,7 @@
     cookieUtente();
     cod_sconto();
     carrello();
+    scadenzaSaldi();
     unset($_SESSION['articolo']);
 
 ?>
@@ -82,7 +83,7 @@
 
           <?php
 
-              $s=$conn->prepare("SELECT p.id, p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
+              $s=$conn->prepare("SELECT p.id, p.id_prodotto, p.nome, p.prezzo, p.prezzo_scontato, p.descrizione, p.categoria,
                                       pf.id, pf.foto0,
                                       pv.id_taglia, pv.id_colore, pv.quantita, p.in_sconto
                                   FROM prodotti as p
@@ -101,7 +102,14 @@
               $idr = $row['id'];
               $id = $row['id_prodotto'];
               $nome = $row['nome'];
-              $prezzo = $row['prezzo'];
+
+              if(isset($row['prezzo_scontato'])){
+                  $prezzo = $row['prezzo_scontato'];
+              }else{
+                  $prezzo_scontato = null;
+                  $prezzo = $row['prezzo'];
+              }
+              
               $descrizione = $row['descrizione'];
               $categoria = $row['categoria'];
               $foto0 = $row['foto0'];
@@ -141,7 +149,7 @@
 
             <?php
 
-                $s=$conn->prepare("SELECT p.id, p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
+                $s=$conn->prepare("SELECT p.id, p.id_prodotto, p.nome, p.prezzo, p.prezzo_scontato, p.descrizione, p.categoria,
                                         pf.id, pf.foto0,
                                         pv.id_taglia, pv.id_colore, pv.quantita, p.in_sconto
                                     FROM prodotti as p
@@ -159,7 +167,14 @@
                 $idr = $row['id'];
                 $id = $row['id_prodotto'];
                 $nome = $row['nome'];
-                $prezzo = $row['prezzo'];
+
+                if(isset($row['prezzo_scontato'])){
+                  $prezzo = $row['prezzo_scontato'];
+                }else{
+                    $prezzo_scontato = null;
+                    $prezzo = $row['prezzo'];
+                }
+
                 $descrizione = $row['descrizione'];
                 $categoria = $row['categoria'];
                 $foto0 = $row['foto0'];
@@ -402,10 +417,18 @@
       }
     ?>
 
-  <!-- Extra JS -->
+    <!-- Extra JS -->
     <?php 
       jsInline();
     ?>
+
+    <!-- LAVORI IN CORSO -->
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            text: 'Ci scusiamo per il disagio. \n Il nostro sito web è ancora in costruzione',
+            showConfirmButton: true});
+    </script>
 
   </body>
 </html>

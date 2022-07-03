@@ -5,7 +5,7 @@
           '<!-- Bootstrap CSS -->
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
           <!-- FontAwesome-->
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />            
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />      
           <link rel="stylesheet" href="../../styles/css/admin.css">
           <link rel="icon" type="image/x-icon" href="../../favicon.ico">
           ';
@@ -1584,198 +1584,6 @@
     ';
   }  
 
-  /*navbar sconti livello 2
-  function navbarSconti2() {
-    $conn = db();
-    echo '
-    <section>
-    <div class="container-fluid bg-black">
-
-      <nav class="navbar navbar-expand-lg navbar-light bg-black nav58">
-          <div class="container-fluid">
-            <div class="col"></div>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                <li class="nav-item">
-                  <div class="dropdown">
-                    <a class="nav-link  my-5 ms-5 dropdown-toggle " href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">catalogo</a>
-                    
-                    <ul class="dropdown-menu mt-3" aria-labelledby="dropdownMenuLink">
-            ';       
-                    $a="SI";
-                    $s=$conn->prepare("SELECT * FROM categoria WHERE attiva = ?");
-                    $s->bind_param("s", $a);
-                    $s->execute();  
-                    $r = $s->get_result(); 
-
-                    echo '
-                          <li><a class="dropdown-item d-flex" href="../../pages/collezione/tutta-la-collezione">TUTTA LA COLLEZIONE</a></li>
-                        ';
-            
-                    while ($row = $r->fetch_assoc()) {
-            
-                        $id = $row['id'];
-                        $nome = $row['n_categoria'];
-                        $attiva = $row['attiva'];
-            
-                        echo '
-                              <li><a class="dropdown-item d-flex" href="../../pages/collezione/'.strtolower($nome).'">'.$nome.'</a></li>
-                        ';
-                    }
-                      
-                 
-            echo '          
-                    </ul>
-                  </div>
-
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link my-5 ms-5" aria-current="page" href="#../../">home</a>
-                </li>
-
-                <li class="nav-item">
-                ';
-
-                    if( isset($_SESSION['access']) OR isset($_COOKIE['access']) )
-                      {
-                        echo '
-                              <li class="nav-item">
-                                <div class="dropdown">
-                                  <a class="nav-link  my-5 ms-5 dropdown-toggle " href="" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">'.$_SESSION['nome'].' '.$_SESSION['cognome'].'</a>
-                                  
-                                  <ul class="dropdown-menu mt-3" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item text-uppercase" href="pages/utente/i-miei-dati">i miei dati</a></li>
-                                    <li><a class="dropdown-item text-uppercase" href="pages/utente/i-miei-ordini">i miei ordini</a></li>
-                                    <li><a class="dropdown-item text-uppercase" href="../../config/server/logout">esci</a></li>
-                                  </ul>
-                                </div>
-                              </li>
-                              ';
-                      }
-                    else 
-                      {
-                        echo '<a class="nav-link  my-5 ms-5" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#modal1">accedi</a>';
-                      }  
-             
-            echo '
-                </li>
-              </ul>
-
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0 ico58">
-                <li class="nav-item">
-                <a href="../../pages/utente/preferiti"><i class="fas fa-heart"></i></a>
-                </li>
-                <li class="nav-item">
-                <a href="../../pages/carrello/carrello"><i class="fas fa-shopping-cart"></i></a>
-                </li>
-              </ul>
-              
-            </div>
-          </div>
-        </nav>
-      </div>
-    </section>
-    ';
-  }*/
-
-  /* navbar sconti mobile livello 2
-  function navbarScontiMobile2() {
-      $conn = db();
-      echo '
-      <section>
-      <nav class="navbar navbar-light bg-black fixed-top">
-        <div class="container-fluid">
-          <div></div>
-          <button class="navbar-toggler closemobile" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header bg-black">
-              <div></div>
-              <button type="button" class="btn-close closemobile text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body  text-center">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link mb-3" aria-current="page" href="../../">Home</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle mb-3" href="#" role="button" id="offcanvasNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">catalogo</a>
-                  <ul class="dropdown-menu mb-3" aria-labelledby="offcanvasNavbarDropdown">
-
-              ';    
-
-                      $a="SI";
-                      $s=$conn->prepare("SELECT * FROM categoria WHERE attiva = ?");
-                      $s->bind_param("s", $a);
-                      $s->execute();  
-                      $r = $s->get_result(); 
-          
-                      echo '
-                            <li><a class="dropdown-item d-flex" href="../../pages/collezione/tutta-la-collezione">TUTTA LA COLLEZIONE</a></li>
-                          ';
-              
-                      while ($row = $r->fetch_assoc()) {
-              
-                          $id = $row['id'];
-                          $nome = $row['n_categoria'];
-                          $attiva = $row['attiva'];
-              
-                          echo '
-                                <li><a class="dropdown-item d-flex" href="../../pages/collezione/'.strtolower($nome).'">'.$nome.'</a></li>
-                          ';
-                      }
-                        
-                        
-              echo '
-
-                  </ul>
-                </li>
-
-                <li class="nav-item mb-3">
-
-              ';  
-                      if( isset($_SESSION['access']) OR isset($_COOKIE['access']) )
-                        {
-                          echo '
-                                <li class="nav-item dropdown">
-                                  <a class="nav-link dropdown-toggle mb-3" href="#" role="button" id="offcanvasNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">'.$_SESSION['nome'].' '.$_SESSION['cognome'].'</a>
-                                  <ul class="dropdown-menu mb-3" aria-labelledby="offcanvasNavbarDropdown">
-                                    <li><a class="dropdown-item text-uppercase" href="../../pages/utente/i-miei-dati">i miei dati</a></li>
-                                    <li><a class="dropdown-item text-uppercase" href="../../pages/utente/i-miei-ordini">i miei ordini</a></li>
-                                    <li><a class="dropdown-item text-uppercase" href="../../config/server/logout">esci</a></li>
-                                  </ul>
-                                </li>
-                                ';
-                        }
-                      else 
-                        {
-                          echo '<a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#modal1">accedi</a>';
-                        }  
-              
-          echo '
-                </li>
-
-                <li class="nav-item icon85">
-                  <a href="../../pages/utente/preferiti"><i class="fas fa-heart"></i></a>
-                  <a href="../../pages/carrello/carrello"><i class="fas fa-shopping-cart"></i></a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </section>
-    ';
-  }*/
-
   //navbar catalogo livello 2
   function navbarCatalogo2() {
     $conn = db();
@@ -2343,6 +2151,34 @@
     $r_bonus->bind_param("s", $today);
     $r_bonus->execute();
     $r_bonus->close();
+  }
+
+    //scadenza saldi
+  function scadenzaSaldi() {
+
+    $conn = db();
+    $data = date("Y/m/d");
+    $null = null;
+
+    //seleziono gli articoli con i saldi
+    $s=$conn->prepare("SELECT * FROM prodotti
+                      WHERE scadenza_saldi <= ?");
+    $s->bind_param("s", $data);
+    $s->execute();  
+    $r = $s->get_result();
+
+    while ($row = $r->fetch_assoc()) {
+
+      //ricevo l'id del prodotto
+      $id = $row['id_prodotto']; 
+
+      //rimuovo i saldi
+      $s=$conn->prepare("UPDATE prodotti SET scadenza_saldi = ?, prezzo_scontato = ? WHERE id_prodotto = ?");
+      $s->bind_param("iii", $null, $null, $id);
+      $s->execute();  
+
+    }
+
   }
   
 ?>

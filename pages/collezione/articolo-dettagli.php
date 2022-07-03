@@ -6,7 +6,7 @@
 
     // ricevo i dati dell'articolo
     $_SESSION['articolo'] = $_GET['id'];
-    $s3=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
+    $s3=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.prezzo_scontato, p.descrizione, p.categoria,
                                 pf.id, pf.foto0, pf.foto1, pf.foto2, pf.foto3, pf.foto4, pf.foto5, pf.foto6, pf.foto7, pf.foto8, pf.foto9,
                                 t.n_taglia, c.n_colore, pv.quantita, p.in_sconto, ti.n_taglia as r
                         FROM prodotti as p
@@ -25,7 +25,14 @@
  
         $nome = $row['nome'];
         $categoria = $row['categoria'];
-        $_SESSION['prezzo']  = $row['prezzo'];
+
+        if(isset($row['prezzo_scontato'])){
+            $_SESSION['prezzo'] = $row['prezzo_scontato'];
+        }else{
+            $prezzo_scontato = null;
+            $_SESSION['prezzo'] = $row['prezzo'];
+        }
+
         $descrizione = $row['descrizione'];
         $descrizione2 = $row['r'];
         $foto = array($row['foto0'],$row['foto1'],$row['foto2'],$row['foto3'],$row['foto4'],

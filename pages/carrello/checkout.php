@@ -66,7 +66,7 @@
               <?php 
                     $_SESSION['complessivo1'] = 0;
                     $s=$conn->prepare("SELECT CONCAT (nome,' ( X ',n_quantita,' ) ', ' ( ',n_colore,' ) ', ' ( ',n_taglia,' ) ')
-                                          AS articoli, prezzo_totale, prezzo_sconto, pf.foto1, p.categoria
+                                          AS articoli, prezzo, prezzo_scontato, prezzo_sconto, pf.foto1, p.categoria, c.n_quantita as qty
                                           FROM carrello AS c
                                           JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
                                           JOIN colore AS co ON co.id = c.id_colore
@@ -86,7 +86,13 @@
                         $foto1 = $row['foto1'];
                         $categoria = $row['categoria'];
                         $psconto = $row['prezzo_sconto'];
-                        $_SESSION['complessivo1'] = $_SESSION['complessivo1'] + $row['prezzo_totale'];
+                        $quantita = $row['qty'];
+
+                        if(isset($row['prezzo_scontato'])){
+                          $_SESSION['complessivo1'] = $_SESSION['complessivo1'] + $row['prezzo_scontato'] * $quantita;
+                        }else{
+                          $_SESSION['complessivo1'] = $_SESSION['complessivo1'] + $row['prezzo'] * $quantita;
+                        }
 
                       }
 
@@ -216,43 +222,43 @@
         </div>
     </section>
 
-    <!-- SEZIONE NOTIFICHE --->
-    <?php
-    
-      if(isset($_SESSION['notificaSconto']) && $_SESSION['notificaSconto'] == 1)
-      {
-          echo "
-          <script>
-              Swal.fire({
-                  icon: 'success',
-                  text: 'Codice sconto aggiunto con successo.',
-                  timer: 3000,
-                  showConfirmButton: false});
-          </script>
-          ";
+  <!-- SEZIONE NOTIFICHE --->
+  <?php
+  
+    if(isset($_SESSION['notificaSconto']) && $_SESSION['notificaSconto'] == 1)
+    {
+        echo "
+        <script>
+            Swal.fire({
+                icon: 'success',
+                text: 'Codice sconto aggiunto con successo.',
+                timer: 3000,
+                showConfirmButton: false});
+        </script>
+        ";
 
-          unset($_SESSION['notificaSconto']);
-      }
-      elseif(isset($_SESSION['notificaSconto']) && $_SESSION['notificaSconto'] == 0)
-      {
-          echo "
-          <script>
-              Swal.fire({
-                  icon: 'error',
-                  text: 'Nessun codice sconto/Codice sconto già in utilizzo.',
-                  timer: 4000,
-                  showConfirmButton: false});
-          </script>
-          ";
+        unset($_SESSION['notificaSconto']);
+    }
+    elseif(isset($_SESSION['notificaSconto']) && $_SESSION['notificaSconto'] == 0)
+    {
+        echo "
+        <script>
+            Swal.fire({
+                icon: 'error',
+                text: 'Nessun codice sconto/Codice sconto già in utilizzo.',
+                timer: 4000,
+                showConfirmButton: false});
+        </script>
+        ";
 
-          unset($_SESSION['notificaSconto']);
-      }     
-    
-    ?>
+        unset($_SESSION['notificaSconto']);
+    }     
+  
+  ?>
 
-    <!-- FOOTER -->
-    <?php footer2(); ?>
-    </div>
+  <!-- FOOTER -->
+  <?php footer2(); ?>
+  </div>
 
   <!-- Extra JS -->
 
@@ -335,15 +341,15 @@
     }
     }).render('#paypal-button-container2');
 
-    </script>
+  </script>
 
-    <!-- SEZIONE MODAL -->
+  <!-- SEZIONE MODAL -->
 
-    <!-- login -->
-    <?php modalLogin2();?>
+  <!-- login -->
+  <?php modalLogin2();?>
 
-    <!-- registrazione-->
-    <?php modalRegistrazione2();?>    
+  <!-- registrazione-->
+  <?php modalRegistrazione2();?>    
 
   </body>
 </html>

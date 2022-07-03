@@ -230,7 +230,7 @@
                             $i = "p.prezzo  ASC";
                         }
                         else { $i = 'p.id'; $s = null;}
-                            $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.descrizione, p.categoria,
+                            $s=$conn->prepare("SELECT p.id_prodotto, p.nome, p.prezzo, p.prezzo_scontato, p.descrizione, p.categoria,
                                                     pf.id, pf.foto0,
                                                     pv.id, pv.id_taglia, pv.id_colore, pv.quantita, p.in_sconto
                                                 FROM prodotti as p
@@ -251,7 +251,14 @@
                                 $idr = $row['id'];
                                 $_SESSION['articolo'] = $row['id_prodotto'];
                                 $nome = $row['nome'];
-                                $prezzo = $row['prezzo'];
+
+                                if(isset($row['prezzo_scontato'])){
+                                    $prezzo = $row['prezzo_scontato'];
+                                }else{
+                                    $prezzo_scontato = null;
+                                    $prezzo = $row['prezzo'];
+                                }
+
                                 $descrizione = $row['descrizione'];
                                 $categoria = $row['categoria'];
                                 $foto0 = $row['foto0'];

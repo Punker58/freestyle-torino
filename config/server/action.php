@@ -1436,9 +1436,9 @@
                 else
                 {
 
-                    $s2=$conn->prepare("INSERT INTO carrello (id_utente, id_prodotto, id_colore, id_taglia, n_quantita, prezzo_singolo, prezzo_totale) 
-                                        VALUES (?,?,?,?,?,?,?)");	
-                    $s2->bind_param("siiiidd", $id_utente, $articolo, $id_colore, $id_taglia, $quantita, $prezzo, $prezzo);	
+                    $s2=$conn->prepare("INSERT INTO carrello (id_utente, id_prodotto, id_colore, id_taglia, n_quantita) 
+                                        VALUES (?,?,?,?,?)");	
+                    $s2->bind_param("siiii", $id_utente, $articolo, $id_colore, $id_taglia, $quantita);	
                     $s2->execute();  
                     $s2->store_result();
                     
@@ -1469,17 +1469,17 @@
         $id_utente = $_SESSION['cod_carrello'];
         $q= $quantita - 1;
 
-        //calcolo il totale
-        $totale = $q * $prezzo;
-
         //controllo variabili con if
         if(!empty($quantita) && !empty($id) && !empty($id_utente) && !empty($prezzo)) {
 
             //check database
-            $s1=$conn->prepare("SELECT * FROM carrello
-                                WHERE id_prodotto = ?
-                                AND id = ?
-                                AND id_utente = ?");	
+            $s1=$conn->prepare("SELECT c.id, c.id_prodotto, c.id_utente,
+                                p.prezzo, p.prezzo_scontato
+                                FROM carrello AS c
+                                JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                WHERE c.id_prodotto = ?
+                                AND c.id = ?
+                                AND c.id_utente = ?");	
             $s1->bind_param("iii", $id, $riga, $id_utente);	
             $s1->execute();  
             $r = $s1->get_result(); 
@@ -1488,7 +1488,13 @@
 
                 $db_riga = $row['id'];
                 $db_id_prodotto = $row['id_prodotto'];
-                $db_prezzo = $row['prezzo_singolo'];
+
+                if(isset($row['prezzo_scontato'])){
+                    $db_prezzo = $row['prezzo_scontato'];
+                }else{
+                    $db_prezzo = $row['prezzo'];
+                }
+
                 $db_utente = $row['id_utente'];
             }
 
@@ -1509,10 +1515,10 @@
                 else 
                 {
 
-                    $s=$conn->prepare("UPDATE carrello SET n_quantita = ?, prezzo_totale = ?
+                    $s=$conn->prepare("UPDATE carrello SET n_quantita = ?
                                         WHERE id_utente = ?
                                         AND id_prodotto = ?");	
-                    $s->bind_param("idsi", $q, $totale, $id_utente, $id);	
+                    $s->bind_param("isi", $q, $id_utente, $id);	
                     $s->execute();  
                     $s->store_result();
 
@@ -1544,19 +1550,19 @@
         $quantita = $_POST['quantita'];
         $prezzo = $_POST['prezzo'];
         $id_utente = $_SESSION['cod_carrello'];
-        $q= $quantita + 1;
-
-        //calcolo il totale
-        $totale = $q * $prezzo;
+        $q = $quantita + 1;
 
         //controllo variabili con if
         if(!empty($quantita) && !empty($id) && !empty($id_utente) && !empty($prezzo)) {
 
             //check database
-            $s1=$conn->prepare("SELECT * FROM carrello
-                                WHERE id_prodotto = ?
-                                AND id = ?
-                                AND id_utente = ?");	
+            $s1=$conn->prepare("SELECT c.id, c.id_prodotto, c.id_utente, c.n_quantita,
+                                p.prezzo, p.prezzo_scontato
+                                FROM carrello AS c
+                                JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                WHERE c.id_prodotto = ?
+                                AND c.id = ?
+                                AND c.id_utente = ?");	
             $s1->bind_param("iii", $id, $riga, $id_utente);	
             $s1->execute();  
             $r = $s1->get_result(); 
@@ -1565,7 +1571,13 @@
 
                 $db_riga = $row['id'];
                 $db_id_prodotto = $row['id_prodotto'];
-                $db_prezzo = $row['prezzo_singolo'];
+
+                if(isset($row['prezzo_scontato'])){
+                    $db_prezzo = $row['prezzo_scontato'];
+                }else{
+                    $db_prezzo = $row['prezzo'];
+                }
+
                 $db_utente = $row['id_utente'];
                 $db_quantita = $row['n_quantita'];
             }
@@ -1581,10 +1593,10 @@
                 else 
                 {
 
-                    $s=$conn->prepare("UPDATE carrello SET n_quantita = ?, prezzo_totale = ?
+                    $s=$conn->prepare("UPDATE carrello SET n_quantita = ?
                                         WHERE id_utente = ?
                                         AND id_prodotto = ?");	
-                    $s->bind_param("idsi", $q, $totale, $id_utente, $id);	
+                    $s->bind_param("isi", $q, $id_utente, $id);	
                     $s->execute();  
                     $s->store_result();
 
@@ -1690,8 +1702,7 @@
                                         p.categoria
                                     FROM carrello AS c
                                     JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
-                                    WHERE c.id_utente = ?
-                                    LIMIT 1");	
+                                    WHERE c.id_utente = ?"); //tolto limit 1	
                 $s2->bind_param("s", $_SESSION['cod_carrello']);	
                 $s2->execute();  
                 $r2 = $s2->get_result();  
@@ -2726,4 +2737,91 @@
         }
 
     }
+
+    // applica saldi
+    if(isset($_POST['saldi'])){
+
+        // ricevo la categoria da scontare
+        $categoria = $_POST['categoria']; 
+        $sconto = $_POST['sconto']; 
+        $scadenza = $_POST['scadenza'];
+
+        //seleziono gli articoli
+        $s=$conn->prepare("SELECT * FROM prodotti AS p
+                            WHERE p.categoria = ?");
+        $s->bind_param("i", $categoria);
+        $s->execute();  
+        $r = $s->get_result();
+
+        while ($row = $r->fetch_assoc()) {
+
+            //ricevo i dati dal database
+            $id = $row['id_prodotto'];
+            $prezzo = $row['prezzo'];
+            $prezzo_scontato = $row['prezzo_scontato'];
+
+            // controllo se l'articolo è già scontato
+            if(empty($prezzo_scontato)){
+
+                // applico i saldi alla categoria
+                $prezzo = $prezzo - ceil($prezzo * $sconto / 100);
+
+                // aggiorno il prezzo scontato
+                $s=$conn->prepare("UPDATE prodotti SET prezzo_scontato = ?, scadenza_saldi = ? WHERE id_prodotto = ?");
+                $s->bind_param("dsi", $prezzo, $scadenza, $id);
+                $s->execute();  
+
+            }
+
+        }
+
+        // notifica
+        $_SESSION['Saldi'] = 1;
+
+        echo'<script> location.replace("../../pages/admin/articoli"); </script>';
+
+        
+    }
+
+    // rimuovi saldi
+    if(isset($_POST['rimuoviSaldi'])){
+
+        // ricevo la categoria da scontare
+        $categoria = $_POST['categoria']; 
+        $null = null;
+
+        //seleziono gli articoli
+        $s=$conn->prepare("SELECT * FROM prodotti AS p
+                            WHERE p.categoria = ?");
+        $s->bind_param("i", $categoria);
+        $s->execute();  
+        $r = $s->get_result();
+
+        while ($row = $r->fetch_assoc()) {
+
+            //ricevo i dati dal database
+            $id = $row['id_prodotto'];
+            $prezzo_scontato = $row['prezzo_scontato'];
+
+            // controllo se l'articolo è già scontato
+            if(!empty($prezzo_scontato)){
+
+                // aggiorno il prezzo scontato
+                $s=$conn->prepare("UPDATE prodotti SET prezzo_scontato = ?, scadenza_saldi = ? WHERE id_prodotto = ?");
+                $s->bind_param("dsi", $null, $null, $id);
+                $s->execute();  
+
+            }
+
+        }
+
+        // notifica
+        $_SESSION['Saldi'] = 2;
+
+        echo'<script> location.replace("../../pages/admin/articoli"); </script>';
+
+        
+    }
+
+
 ?>

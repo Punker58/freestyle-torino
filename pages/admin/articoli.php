@@ -625,7 +625,7 @@
                                 </form>
                             </div>
                         </div>
-                    </div> 
+                    </div>  
                     
                     <!-- ELIMINA ARTICOLO -->
                     <div class="col-md-3">
@@ -673,7 +673,139 @@
                                 </form>
                             </div>
                         </div>
-                    </div>                     
+                    </div>   
+                    
+                    <!-- APPLICA SALDI -->
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art9">
+                            <div>
+                                <p class="fs-5">Applica Saldi</p>
+                            </div>
+                                <i class="fas fa-percent fs-1 primary-text border rounded-full bg-success p-3"></i>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="art9" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">SALDI</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data" autocomplete="off">
+
+                                    <div class="modal-body">
+
+                                        <div class="form-floating mb-3">
+
+                                            <select class="form-select" aria-label="Default select example" id="floatingCategoria" name="categoria" placeholder="CATEGORIA" required>
+
+                                                <option selected hidden> SELEZIONA CATEGORIA</option>
+
+                                                <?php
+
+                                                    $s=$conn->prepare("SELECT * FROM categoria");
+                                                    $s->execute();  
+                                                    $r = $s->get_result(); 
+
+                                                    while ($row = $r->fetch_assoc()) {
+
+                                                        $id = $row['id'];
+                                                        $nome = $row['n_categoria'];
+                                                    
+                                                        echo '<option style="display:none"></option><option value="'.$id.'">'.$nome.'</option>';
+
+                                                    }
+                                                    
+                                                ?>   
+
+                                            </select>
+                                            <label for="floatingCategoria">CATEGORIA</label>
+
+
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" id="floatingNome" name="sconto" placeholder="sconto" required>
+                                            <label for="floatingNome">% DI SALDO</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="date" class="form-control" id="datepicker" name="scadenza" placeholder="DATA" min="<?= date('Y-m-d'); ?>" required>
+                                            <label for="datepicker" class="ms-2">SCADENZA</label>
+                                        </div>
+                                        
+                                    </div> 
+                                        
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success" name="saldi">APPLICA SALDI</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>      
+                    
+                    <!-- RIMUOVI SALDI -->
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded" type="button" data-bs-toggle="modal" data-bs-target="#art10">
+                            <div>
+                                <p class="fs-5">Rimuovi Saldi</p>
+                            </div>
+                                <i class="fas fa-percent fs-1 primary-text border rounded-full bg-warning p-3"></i>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="art10" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">RIMUOVI SALDI</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <form action="../../config/server/action" method="POST" enctype="multipart/form-data" autocomplete="off">
+
+                                    <div class="modal-body">
+
+                                        <div class="form-floating mb-3">
+
+                                            <select class="form-select" aria-label="Default select example" id="floatingCategoria" name="categoria" placeholder="CATEGORIA" required>
+
+                                                <option selected hidden> SELEZIONA CATEGORIA</option>
+
+                                                <?php
+
+                                                    $s=$conn->prepare("SELECT * FROM categoria");
+                                                    $s->execute();  
+                                                    $r = $s->get_result(); 
+
+                                                    while ($row = $r->fetch_assoc()) {
+
+                                                        $id = $row['id'];
+                                                        $nome = $row['n_categoria'];
+                                                    
+                                                        echo '<option style="display:none"></option><option value="'.$id.'">'.$nome.'</option>';
+
+                                                    }
+                                                    
+                                                ?>   
+
+                                            </select>
+                                            <label for="floatingCategoria">CATEGORIA</label>
+
+
+                                        </div>
+                                        
+                                    </div> 
+                                        
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success" name="rimuoviSaldi">RIMUOVI SALDI</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>                       
 
                 </div>
 
@@ -718,7 +850,7 @@
 
                                 $s=$conn->prepare("SELECT GROUP_CONCAT(c.n_colore, ' - ',t.n_taglia, ' - ', pv.quantita SEPARATOR '<br>') AS variante,
                                                             GROUP_CONCAT(pv.id) as id,
-                                                            p.id_prodotto, p.nome, p.prezzo, p.descrizione,  p.categoria,
+                                                            p.id_prodotto, p.nome, p.prezzo, p.prezzo_scontato, p.descrizione,  p.categoria,
                                                             pf.foto0, pf.foto1, pf.foto2,pf.foto3, pf.foto4, pf.foto5, pf.foto6, pf.foto7, pf.foto8, pf.foto9,
                                                             p._like, p.in_sconto, 
                                                             ca.n_categoria
@@ -738,7 +870,9 @@
 
                                     $id = $row['id_prodotto'];
                                     $nome = $row['nome'];
-                                    $prezzo = $row['prezzo'];
+
+
+
                                     $descrizione = $row['descrizione'];
                                     $categoria = $row['n_categoria'];
                                     $foto = array($row['foto0'], $row['foto1'], $row['foto2'] , $row['foto3'],$row['foto4'],
@@ -754,8 +888,20 @@
                                         '
                                         <tr>
                                             <th scope=\"row\">'.$id.'</th>
-                                            <td>'.$nome.'</td>
-                                            <td>'.$prezzo.' €</td>
+                                            <td>'.$nome.'</td>';
+                                        ?>
+                                    <?php    
+                                            if(isset($row['prezzo_scontato'])){
+                                                $pv = $row['prezzo'];
+                                                $prezzo = $row['prezzo_scontato'];
+                                                echo '<td><span class="text-decoration-line-through">'.$pv.'</span> <br/> <span>'.$prezzo.' €</span></td>';
+                                            }else{
+                                                $prezzo_scontato = null;
+                                                $prezzo = $row['prezzo'];
+                                                echo '<td>'.$prezzo.' €</td>';
+                                            }
+
+                                    echo'        
                                             <td>'.$descrizione.'</td>
                                             <td>'.$categoria.'</td>
                                             <td>
@@ -844,7 +990,7 @@
     </div>
     <!-- /#page-content-wrapper -->
 
-    <!--  SEZIONE MODAL -->
+    <!--  NOTIFICHE -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div id="not2" class="modal-dialog">
             <div class="modal-content">
@@ -1230,6 +1376,34 @@
             </script>
             ";
             unset($_SESSION['aggArticolo']);
+        }
+        else if(isset($_SESSION['Saldi']) && $_SESSION['Saldi'] == 1)
+        {
+
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Saldi applicati con successo.',
+                    timer: 2000,
+                    showConfirmButton: false});
+            </script>
+            ";
+            unset($_SESSION['Saldi']);
+        }
+        else if(isset($_SESSION['Saldi']) && $_SESSION['Saldi'] == 2)
+        {
+
+            echo "
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Saldi rimossi con successo.',
+                    timer: 2000,
+                    showConfirmButton: false});
+            </script>
+            ";
+            unset($_SESSION['Saldi']);
         }
 
     ?>

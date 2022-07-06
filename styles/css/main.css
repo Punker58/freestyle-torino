@@ -11,6 +11,7 @@
     /* font-family: 'Quintessential', cursive; */
 }
 
+
 body, html {
     height: 100%;
     margin: 0;
@@ -641,3 +642,20 @@ option{
 .swal2-styled {
     background-color:green !important;
 }
+
+/* radio button tipo di consegna : checked*/
+.form-check-input:checked {
+    background-color: var(--second-font-color) !important;
+    border-color: var(--second-font-color) !important;
+}
+
+/* radio button tipo di consegna : checked*/
+.form-check-input:focus {
+    box-shadow: none !important; 
+}
+
+/* input text :focus*/
+.form-control:focus {
+    border-color: var(--second-font-color) !important;
+}
+

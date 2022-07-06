@@ -441,16 +441,8 @@
           <meta http-equiv="Expires" content="0" />
           ';
           unset($_SESSION['complessivo1']);
-          unset($_SESSION['complessivo2']);
-          
-        //elimino lo sconto
-        $conn = db();
-        $z=null;
-        $w=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                          WHERE id_utente = ?");	
-        $w->bind_param("is", $z, $_SESSION['cod_carrello']);
-        $w->execute();  
-        $w->store_result();      
+          unset($_SESSION['complessivo2']);    
+          unset($_SESSION["complessivoScontato"]);
 
   }
 

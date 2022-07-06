@@ -1665,258 +1665,320 @@
 
     // checkout codice sconto
     if(isset($_POST["coupon"])){
+
+        // ricevo il codice e dichiaro il complessivo
         $cod = htmlspecialchars($_POST['codice']);
         $complessivo = 0;
         $complessivo2 = 0;
+        $_SESSION['complessivo_scontato'] = 0;
 
-        // controllo se un coupon è stato già utilizzato
-        $s=$conn->prepare("SELECT * FROM utente_sconto
-                            WHERE id_utente = ?");	
-        $s->bind_param("i", $_SESSION['id']);	
-        $s->execute();  
-        $r = $s->get_result(); 
+        // check codice sconto nel db
+        $s1=$conn->prepare("SELECT * FROM cod_sconto
+                        WHERE codice = ?");	
+        $s1->bind_param("s", $cod);	
+        $s1->execute();  
+        $r1 = $s1->get_result(); 
 
-        while ($row = $r->fetch_assoc()) {
-            $coupon = $row['id_sconto'];
+        while ($row = $r1->fetch_assoc()) {
+            $id_codice = $row['id'];
+            $codice = $row['codice'];
+            $tipo = $row['tipo'];
+            $gamma = $row['gamma'];
+            $valore = $row['valore'];
         }
 
-            if(empty($coupon)){//se il coupon non è stato utilizzato
+        $_SESSION['scontoUtilizzato'] = $id_codice; // serve a constatare che il bonus sia stato utilizzato
 
-                // check codice sconto nel db
-                $s1=$conn->prepare("SELECT * FROM cod_sconto
-                                WHERE codice = ?");	
-                $s1->bind_param("s", $cod);	
-                $s1->execute();  
-                $r1 = $s1->get_result(); 
+        // check codice del coupon
+        if(isset($id_codice)){
 
-                while ($row = $r1->fetch_assoc()) {
-                    $id_codice = $row['id'];
-                    $codice = $row['codice'];
-                    $tipo = $row['tipo'];
-                    $gamma = $row['gamma'];
-                    $valore = $row['valore'];
-                }
+            // controllo se un coupon è stato già utilizzato
+            $s=$conn->prepare("SELECT * FROM utente_sconto
+                                WHERE id_utente = ?
+                                AND id_sconto = ?");	
+            $s->bind_param("ii", $_SESSION['id'], $id_codice);	
+            $s->execute();  
+            $r = $s->get_result(); 
 
-                //seleziono tutti i tuoi articoli
-                $s2=$conn->prepare("SELECT c.id, c.id_prodotto, c.prezzo_totale,
-                                        p.categoria
-                                    FROM carrello AS c
-                                    JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
-                                    WHERE c.id_utente = ?"); //tolto limit 1	
-                $s2->bind_param("s", $_SESSION['cod_carrello']);	
-                $s2->execute();  
-                $r2 = $s2->get_result();  
-
-                while ($row = $r2->fetch_assoc()) {
-                    $id_prodotto = $row['id_prodotto'];
-                    $categoria = $row['categoria'];
-                    $complessivo = $complessivo + $row['prezzo_totale'];
-                }                
-
-                if(!empty($codice)){ //il codice esiste nel db
-
-                    if($tipo == 1 AND $gamma == null){ // euro + tutta la gamma  1052668106
-
-                        // vado a scontare il tuo articolo
-                        $complessivo = $complessivo - $valore;
-
-                        // aggiorno il tuo prezzo nel db
-                        $s1=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                                            WHERE id_utente = ?
-                                            LIMIT 1");	
-                        $s1->bind_param("is", $complessivo, $_SESSION['cod_carrello']);	
-                        $s1->execute();  
-
-                        // inserisco la riga di codice già utilizzato
-                        $s2=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto)
-                                            VALUES (?,?)");	
-                        $s2->bind_param("ii", $_SESSION['id'], $id_codice);	
-                        $s2->execute();     
-
-                        //notifiche
-                        $_SESSION['notificaSconto'] = 1;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
-
-                    }
-
-                    elseif($tipo == 1 AND $categoria == $gamma AND $gamma <= 999){//euro + categoria
-
-                        // vado a scontare il tuo articolo
-                        $complessivo = $complessivo - $valore;
-
-                        // aggiorno il tuo prezzo nel db
-                        $s1=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                                            WHERE id_utente = ?
-                                            LIMIT 1");	
-                        $s1->bind_param("is", $complessivo, $_SESSION['cod_carrello']);	
-                        $s1->execute();  
-
-                        // inserisco la riga di codice già utilizzato
-                        $s2=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto)
-                                            VALUES (?,?)");	
-                        $s2->bind_param("ii", $_SESSION['id'], $id_codice);	
-                        $s2->execute();     
-
-                        //notifiche
-                        $_SESSION['notificaSconto'] = 1;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
-
-                    }
-
-                    elseif($tipo == 1 AND $id_prodotto == $gamma AND $gamma >= 1000 ){//euro + articolo
-
-                        // vado a scontare il tuo articolo
-                        $complessivo = $complessivo - $valore;
-
-                        // aggiorno il tuo prezzo nel db
-                        $s1=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                                            WHERE id_utente = ?
-                                            LIMIT 1");	
-                        $s1->bind_param("is", $complessivo, $_SESSION['cod_carrello']);	
-                        $s1->execute();  
-
-                        // inserisco la riga di codice già utilizzato
-                        $s2=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto)
-                                            VALUES (?,?)");	
-                        $s2->bind_param("ii", $_SESSION['id'], $id_codice);	
-                        $s2->execute();     
-
-                        //notifiche
-                        $_SESSION['notificaSconto'] = 1;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';                        
-
-                    }
-
-                    elseif($tipo == 2 AND $gamma == null ){ //percentuale + tutta la gamma     
-                        
-                        //seleziono tutti i tuoi articoli per la percentuale
-                        $s5=$conn->prepare("SELECT c.id, c.prezzo_totale
-                                            FROM carrello AS c
-                                            WHERE c.id_utente = ?");	
-                        $s5->bind_param("s", $_SESSION['cod_carrello']);	
-                        $s5->execute();  
-                        $r5 = $s5->get_result();  
-
-                        while ($row = $r5->fetch_assoc()) {
-                            $riga = $row['id'];
-                            $complessivo2 = $row['prezzo_totale'];
-                                              
-                            // vado a scontare il tuo articolo
-                            $complessivo3 = $complessivo2  * $valore / 100;
-                            $complessivo2 -= $complessivo3;
-
-                            // aggiorno il tuo prezzo nel db
-                            $s1=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                                                WHERE id_utente = ?
-                                                AND id = ?");	
-                            $s1->bind_param("isi", $complessivo2, $_SESSION['cod_carrello'], $riga);	
-                            $s1->execute();  
-                            
-                        }
-
-                        // inserisco la riga di codice già utilizzato
-                        $s2=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto)
-                                            VALUES (?,?)");	
-                        $s2->bind_param("ii", $_SESSION['id'], $id_codice);	
-                        $s2->execute();                         
-
-                        //notifiche
-                        $_SESSION['notificaSconto'] = 1;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
-
-                    }
-                    elseif($tipo == 2 AND $categoria == $gamma AND $gamma <= 999 ){ //percentuale + categoria            
-
-                        //seleziono tutti i tuoi articoli per la percentuale
-                        $s5=$conn->prepare("SELECT c.id, c.prezzo_totale
-                                            FROM carrello AS c
-                                            WHERE c.id_utente = ?");	
-                        $s5->bind_param("s", $_SESSION['cod_carrello']);	
-                        $s5->execute();  
-                        $r5 = $s5->get_result();  
-
-                        while ($row = $r5->fetch_assoc()) {
-                            $riga = $row['id'];
-                            $complessivo2 = $row['prezzo_totale'];
-                                              
-                            // vado a scontare il tuo articolo
-                            $complessivo3 = $complessivo2  * $valore / 100;
-                            $complessivo2 -= $complessivo3;
-
-                            // aggiorno il tuo prezzo nel db
-                            $s1=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                                                WHERE id_utente = ?
-                                                AND id = ?");	
-                            $s1->bind_param("isi", $complessivo2, $_SESSION['cod_carrello'], $riga);	
-                            $s1->execute();  
-                            
-                        }
-
-                        // inserisco la riga di codice già utilizzato
-                        $s2=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto)
-                                            VALUES (?,?)");	
-                        $s2->bind_param("ii", $_SESSION['id'], $id_codice);	
-                        $s2->execute();                         
-
-                        //notifiche
-                        $_SESSION['notificaSconto'] = 1;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';                        
-                    } 
-                    elseif($tipo == 2 AND $id_prodotto == $gamma AND $gamma >= 1000 ){ //percentuale + articolo   
-  
-                        //seleziono tutti i tuoi articoli per la percentuale
-                        $s5=$conn->prepare("SELECT c.id, c.prezzo_totale
-                                            FROM carrello AS c
-                                            WHERE c.id_utente = ?");	
-                        $s5->bind_param("s", $_SESSION['cod_carrello']);	
-                        $s5->execute();  
-                        $r5 = $s5->get_result();  
-
-                        while ($row = $r5->fetch_assoc()) {
-                            $riga = $row['id'];
-                            $complessivo2 = $row['prezzo_totale'];
-                                              
-                            // vado a scontare il tuo articolo
-                            $complessivo3 = $complessivo2  * $valore / 100;
-                            $complessivo2 -= $complessivo3;
-
-                            // aggiorno il tuo prezzo nel db
-                            $s1=$conn->prepare("UPDATE carrello SET prezzo_sconto = ? 
-                                                WHERE id_utente = ?
-                                                AND id = ?");	
-                            $s1->bind_param("isi", $complessivo2, $_SESSION['cod_carrello'], $riga);	
-                            $s1->execute();  
-                            
-                        }
-
-                        // inserisco la riga di codice già utilizzato
-                        $s2=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto)
-                                            VALUES (?,?)");	
-                        $s2->bind_param("ii", $_SESSION['id'], $id_codice);	
-                        $s2->execute();                         
-
-                        //notifiche
-                        $_SESSION['notificaSconto'] = 1;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';                         
-
-                    }
-                    else {
-                        $_SESSION['notificaSconto'] = 0;
-                        echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
-                    }
-
-                }
-                else{
-                    $_SESSION['notificaSconto'] = 0;
-                    echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
-                }
-
+            while ($row = $r->fetch_assoc()) {
+                $coupon = $row['id_sconto'];
             }
+
+                if(empty($coupon)){//se il coupon non è stato utilizzato
+
+                    // percentuale + categoria
+                    if($tipo == 2 AND $gamma <= 999 ){
+
+                        //check articolo nel carrello
+                        $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                p.categoria, p.prezzo, p.prezzo_scontato
+                                            FROM carrello AS c
+                                            JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                            WHERE c.id_utente = ?
+                                            AND p.categoria = ?"); 
+                        $s2->bind_param("si", $_SESSION['cod_carrello'], $gamma);	
+                        $s2->execute(); 
+                        $r = $s2->get_result();
+                        $c = $r->num_rows;//count
+
+                        if($c>0){
+
+                            //seleziono l'articolo da scontare
+                            $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                    p.categoria, p.prezzo, p.prezzo_scontato
+                                                FROM carrello AS c
+                                                JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                                WHERE c.id_utente = ?"); 
+                            $s2->bind_param("s", $_SESSION['cod_carrello']);	
+                            $s2->execute();  
+                            $r2 = $s2->get_result();  
+
+                            while ($row = $r2->fetch_assoc()) {
+
+                                $categoria = $row['categoria'];
+
+                                /* controllo se il prezzo è scontato oppure no
+                                    poi calcolo il complessivo
+                                */
+
+                                if(isset($row['prezzo_scontato'])){
+                                    $prezzo = number_format($row['prezzo_scontato'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }else{
+                                    $prezzo = number_format($row['prezzo'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }
+
+                            }
+
+                            // vado a scontare il tuo articolo
+                            $complessivo2 = ceil($complessivo  * $valore / 100);
+                            $complessivo -= $complessivo2;
+
+                            // assegno il nuovo prezzo
+                            $_SESSION["complessivoScontato"] = number_format($complessivo,2);
+
+
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 1;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';   
+
+
+                        }else{
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 0;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
+                        }
+
+                    }
+
+                    // percentuale + articolo
+                    if($tipo == 2 AND $gamma >= 1000 ){
+
+                        //check articolo nel carrello
+                        $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                p.categoria, p.prezzo, p.prezzo_scontato
+                                            FROM carrello AS c
+                                            JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                            WHERE c.id_utente = ?
+                                            AND c.id_prodotto = ?"); 
+                        $s2->bind_param("si", $_SESSION['cod_carrello'], $gamma);	
+                        $s2->execute(); 
+                        $r = $s2->get_result();
+                        $c = $r->num_rows;//count
+
+                        if($c>0){
+
+                            //seleziono l'articolo da scontare
+                            $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                    p.categoria, p.prezzo, p.prezzo_scontato
+                                                FROM carrello AS c
+                                                JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                                WHERE c.id_utente = ?"); 
+                            $s2->bind_param("s", $_SESSION['cod_carrello']);	
+                            $s2->execute();  
+                            $r2 = $s2->get_result();  
+
+                            while ($row = $r2->fetch_assoc()) {
+
+                                $categoria = $row['categoria'];
+
+                                /* controllo se il prezzo è scontato oppure no
+                                    poi calcolo il complessivo
+                                */
+
+                                if(isset($row['prezzo_scontato'])){
+                                    $prezzo = number_format($row['prezzo_scontato'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }else{
+                                    $prezzo = number_format($row['prezzo'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }
+
+                            }
+
+                            // vado a scontare il tuo articolo
+                            $complessivo2 = ceil($complessivo  * $valore / 100);
+                            $complessivo -= $complessivo2;
+
+                            // assegno il nuovo prezzo
+                            $_SESSION["complessivoScontato"] = number_format($complessivo,2);
+
+
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 1;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';   
+
+
+                        }else{
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 0;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
+                        }
+
+                    }                
+
+                    // euro + categoria
+                    if($tipo == 1 AND $gamma <= 999 ){
+
+                        //check articolo nel carrello
+                        $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                p.categoria, p.prezzo, p.prezzo_scontato
+                                            FROM carrello AS c
+                                            JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                            WHERE c.id_utente = ?
+                                            AND p.categoria = ?"); 
+                        $s2->bind_param("si", $_SESSION['cod_carrello'], $gamma);	
+                        $s2->execute(); 
+                        $r = $s2->get_result();
+                        $c = $r->num_rows;//count
+
+                        if($c>0){
+
+                            //seleziono l'articolo da scontare
+                            $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                    p.categoria, p.prezzo, p.prezzo_scontato
+                                                FROM carrello AS c
+                                                JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                                WHERE c.id_utente = ?"); 
+                            $s2->bind_param("s", $_SESSION['cod_carrello']);	
+                            $s2->execute();  
+                            $r2 = $s2->get_result();  
+
+                            while ($row = $r2->fetch_assoc()) {
+
+                                $categoria = $row['categoria'];
+
+                                /* controllo se il prezzo è scontato oppure no
+                                    poi calcolo il complessivo
+                                */
+
+                                if(isset($row['prezzo_scontato'])){
+                                    $prezzo = number_format($row['prezzo_scontato'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }else{
+                                    $prezzo = number_format($row['prezzo'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }
+
+                            }
+
+                            // vado a scontare il tuo articolo
+                            $complessivo -= $valore;
+
+                            // assegno il nuovo prezzo
+                            $_SESSION["complessivoScontato"] = number_format($complessivo,2);
+
+
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 1;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';   
+
+
+                        }else{
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 0;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
+                        }
+
+                    }
+
+                    // percentuale + articolo
+                    if($tipo == 1 AND $gamma >= 1000 ){
+
+                        //check articolo nel carrello
+                        $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                p.categoria, p.prezzo, p.prezzo_scontato
+                                            FROM carrello AS c
+                                            JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                            WHERE c.id_utente = ?
+                                            AND c.id_prodotto = ?"); 
+                        $s2->bind_param("si", $_SESSION['cod_carrello'], $gamma);	
+                        $s2->execute(); 
+                        $r = $s2->get_result();
+                        $c = $r->num_rows;//count
+
+                        if($c>0){
+
+                            //seleziono l'articolo da scontare
+                            $s2=$conn->prepare("SELECT c.id, c.id_prodotto,
+                                                    p.categoria, p.prezzo, p.prezzo_scontato
+                                                FROM carrello AS c
+                                                JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
+                                                WHERE c.id_utente = ?"); 
+                            $s2->bind_param("s", $_SESSION['cod_carrello']);	
+                            $s2->execute();  
+                            $r2 = $s2->get_result();  
+
+                            while ($row = $r2->fetch_assoc()) {
+
+                                $categoria = $row['categoria'];
+
+                                /* controllo se il prezzo è scontato oppure no
+                                    poi calcolo il complessivo
+                                */
+
+                                if(isset($row['prezzo_scontato'])){
+                                    $prezzo = number_format($row['prezzo_scontato'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }else{
+                                    $prezzo = number_format($row['prezzo'],2);
+                                    $complessivo = $complessivo + $prezzo;
+                                }
+
+                            }
+
+                            // vado a scontare il tuo articolo
+                            $complessivo -= $valore;
+
+                            // assegno il nuovo prezzo
+                            $_SESSION["complessivoScontato"] = number_format($complessivo,2);
+
+
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 1;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';   
+
+
+                        }else{
+                            //notifiche
+                            $_SESSION['notificaSconto'] = 0;
+                            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
+                        }
+
+                    }                
+
+                }
 
             else{
                 $_SESSION['notificaSconto'] = 0;
                 echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
             }
+        }else{
+            $_SESSION['notificaSconto'] = 0;
+            echo'<script> location.replace("../../pages/carrello/checkout"); </script>';
+        }
+
     }
 
     // codice tracking con utente registrato 

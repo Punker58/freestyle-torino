@@ -66,7 +66,7 @@
               <?php 
                     $_SESSION['complessivo1'] = 0;
                     $s=$conn->prepare("SELECT CONCAT (nome,' ( X ',n_quantita,' ) ', ' ( ',n_colore,' ) ', ' ( ',n_taglia,' ) ')
-                                          AS articoli, prezzo, prezzo_scontato, prezzo_sconto, pf.foto1, p.categoria, c.n_quantita as qty
+                                          AS articoli, prezzo, prezzo_scontato, pf.foto1, p.categoria, c.n_quantita as qty
                                           FROM carrello AS c
                                           JOIN prodotti AS p ON p.id_prodotto = c.id_prodotto
                                           JOIN colore AS co ON co.id = c.id_colore
@@ -85,27 +85,29 @@
                         $articoli[] = $row['articoli'];
                         $foto1 = $row['foto1'];
                         $categoria = $row['categoria'];
-                        $psconto = $row['prezzo_sconto'];
                         $quantita = $row['qty'];
 
-                        if(isset($row['prezzo_scontato'])){
+                        if(isset($row['prezzo_scontato'])){ // sconto del saldo
+
                           $_SESSION['complessivo1'] = $_SESSION['complessivo1'] + $row['prezzo_scontato'] * $quantita;
+                
                         }else{
+
                           $_SESSION['complessivo1'] = $_SESSION['complessivo1'] + $row['prezzo'] * $quantita;
+
                         }
 
                       }
 
-                      if(!empty($psconto)){
-
-                        $_SESSION['complessivo2'] = $psconto + 7;
-
-                      }
-                      elseif(empty($psconto)){
-
-                        $_SESSION['complessivo2'] = $_SESSION['complessivo1'] + 7;
+                      if(isset($_SESSION["complessivoScontato"])){
+                        $_SESSION['complessivo1'] = $_SESSION["complessivoScontato"];
                       }
 
+
+                      // totale + spedizione
+                      $_SESSION['complessivo2'] = $_SESSION['complessivo1'] + 7;
+
+                      // articoli
                       $articoli2 = implode("</br></br> ", $articoli);
 
                       echo 
@@ -158,6 +160,8 @@
 
                              }
 
+                            if(!isset($_SESSION['complessivoScontato'])){
+
                               echo '  
                                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 text-center">
                                             <h1 class="t-dettagli">Coupon</h1>
@@ -170,10 +174,20 @@
                                                 </div>
                                               </form>
                                         </div>
-                                        </div>
+                                        </div>';
+
+                            }else{
+                              echo '  
+                                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 text-center">
+                                            <h1 class="t-dettagli">Coupon</h1>
+                                            <p>Utilizzato  <i class="fas fa-check-circle text-success"></i></p>
+                                        </div>';
+                            }
+                            
+                            echo'
 
                                             <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 mb-5 text-center" id="spedizione">
-                                              <h2>Articoli: '; ?> <?php if(!empty($psconto) && $_SESSION['complessivo1'] <= 0) { echo '0€';}elseif(!empty($psconto) && $_SESSION['complessivo1'] >= 1){ echo number_format($psconto,2)."€";}else{ echo number_format($_SESSION['complessivo1'],2)."€";} ?><?php echo '</h2>
+                                              <h2>Articoli: '; ?> <?php if($_SESSION['complessivo1'] <= 0) { echo '0€';}else{ echo number_format($_SESSION['complessivo1'],2)."€";} ?><?php echo '</h2>
                                               <h2>Spedizione: 7.00€</h2>
                                               <h1 class="t-dettagli">Totale da pagare: '.number_format($_SESSION['complessivo2'],2).'€</h1>
                                             </div>  

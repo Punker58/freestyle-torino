@@ -23,6 +23,16 @@
 		$testo = 1; // hai un nuovo ordine
 		$stato = 0;
 
+		// check codice coupon
+		if(isset($_SESSION['scontoUtilizzato'])){
+
+			$sx=$conn->prepare("INSERT INTO utente_sconto (id_utente, id_sconto) 
+						VALUES (?,?)");
+            $sx->bind_param("ii", $_SESSION['id'], $_SESSION['scontoUtilizzato']);
+            $sx->execute();
+
+		}
+
         // seleziono l'articolo dal carrello con i suoi dettagli
         $s=$conn->prepare("SELECT c.id_prodotto, c.id_colore, c.id_taglia, c.n_quantita,
                                 pv.quantita

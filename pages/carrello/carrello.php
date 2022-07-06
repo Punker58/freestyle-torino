@@ -92,6 +92,8 @@
 
                       if(isset($row['prezzo_scontato'])){
                         $prezzo_singolo = $row['prezzo_scontato'];
+                      }elseif(isset($_SESSION['complessivoScontato'])){
+                          $prezzo_singolo = $_SESSION['complessivoScontato'];
                       }else{
                           $prezzo_scontato = null;
                           $prezzo_singolo = $row['prezzo'];

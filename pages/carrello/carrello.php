@@ -149,7 +149,7 @@
                                         
                                         </td>
 
-                                        <td data-label="Prezzo Totale" class="t-dettagli">'; ?> <?php if($prezzo_totale < 0) { echo '0 (SCONTO)';}else{ echo $prezzo_totale;} ?> <?php echo'€</td>
+                                        <td data-label="Prezzo Totale" class="t-dettagli">'; ?> <?php if($prezzo_totale < 0) { echo '0 (SCONTO)';}else{ echo number_format($prezzo_totale,2);} ?> <?php echo'€</td>
                                       </tr>
                                     </tbody>
                                   </table>

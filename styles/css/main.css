@@ -412,9 +412,7 @@ footer p:hover{
 
 .attivo {
     text-transform: uppercase;
-    font-size:3vh;
     color: var(--second-font-color) !important;
-    border: 2px var(--main-font-color) solid !important;
 }
 
 .dropdown-item {

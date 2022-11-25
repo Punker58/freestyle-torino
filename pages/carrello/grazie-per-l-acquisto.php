@@ -4,7 +4,7 @@
     include '../../config/server/action.php';
     cookieUtente();
     cod_sconto();
-	if(!isset($_SESSION['y']) OR !isset($_SESSION['token'])){echo'<script> location.replace("../../"); </script>';}
+	if(!isset($_SESSION['y']) OR !isset($_SESSION['token'])){echo'<script> location.replace("../index.php"); </script>';}
 
     //check token + get var ritiro in negozio + data + stato ordine da ritirare
     $x = str_replace('-', '/', $_GET['token'] );
